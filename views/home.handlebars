@@ -1,0 +1,24 @@
+<h1>This is my home page</h1>
+
+<form class="" action="/settings" method="post">
+    <input type="text" name="smsCost" placeholder="enter sms cost">
+    <input type="text" name="callCost" placeholder="enter call cost">
+    <input type="text" name="warningLevel" placeholder="enter warning level">
+    <input type="text" name="criticalLevel" placeholder="enter critical level">
+    <input type="submit">
+</form>
+
+<table>
+    <tr>
+        <td>smsCost</td>
+        <td>callCost</td>
+        <td>warningLevel</td>
+        <td>criticalLevel</td>
+    </tr>
+    <tr>
+        <td>{{settings.smsCost}}</td>
+        <td>{{settings.callCost}}</td>
+        <td>{{settings.warningLevel}}</td>
+        <td>{{settings.criticalLevel}}</td>
+    </tr>
+</table>
