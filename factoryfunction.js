@@ -10,11 +10,8 @@ module.exports = function mockFactory() {
     function getGreet() {
         return theGreeting
     }
-
-
     
         return {
-
         greet,
         getGreet
     }
