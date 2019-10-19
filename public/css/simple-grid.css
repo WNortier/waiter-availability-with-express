@@ -249,6 +249,10 @@ table, th, td {
   border: 1px solid black;
 }
 
+a {
+  text-decoration:none
+}
+
 .header {
   background-color: darkgray;
   border-radius: 30px;
@@ -262,4 +266,8 @@ table, th, td {
 
 .inputSpacers {
   height: 1em;
+}
+
+.generalSpacer {
+  height: 3em;
 }

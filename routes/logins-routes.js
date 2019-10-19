@@ -4,7 +4,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
     //     res.send("Basic ExpressJS Server Template");
     // }
 
-    async function homeRoute(req, res, next) {
+    async function primary(req, res, next) {
         try {
             res.render("home", {
                 test: loginsFactory.helloWorld()
@@ -26,9 +26,27 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
+    async function aboutRoute(req, res, next) {
+        try {
+            res.render("about");
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async function homeRoute(req, res, next) {
+        try {
+            res.redirect("/");
+        } catch (err) {
+            next(err);
+        }
+    }
+
     return {
         //sendRoute,
-        homeRoute,
-        aPostRoute
+        primary,
+        aPostRoute,
+        aboutRoute,
+        homeRoute
     }
 }

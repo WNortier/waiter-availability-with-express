@@ -1,60 +1,62 @@
+'use strict';
 //Express
 const express = require('express');
-const app = express();
-//Bodyparser
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({
-  extended: false
-}))
-app.use(bodyParser.json())
-//Flashmessaging
-const flash = require('express-flash');
-const session = require('express-session');
-app.use(flash());
-app.use(session({
-  secret: "<add a secret string here>",
-  resave: false,
-  saveUninitialized: true
-}));
-//Handlebars
 const exphbs = require('express-handlebars');
-app.engine('handlebars', exphbs({
-  defaultLayout: 'main'
-}));
-app.set('view engine', 'handlebars');
-//Styling
-app.use(express.static('public'))
+const bodyParser = require('body-parser')
+const LoginsRoutes = require('./routes/logins-routes')
+const WaitersRoutes = require('./routes/waiters-routes')
+const app = express();
+const session = require('express-session');
+const flash = require('express-flash');
+const LoginsFactory = require('./services/logins-factory')
+const WaitersFactory = require('./services/waiters-factory')
 //Postgresql
 const pg = require("pg");
-const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/registrations';
-
+const Pool = pg.Pool;
+//Should we use an SSL connection
 let useSSL = false;
 let local = process.env.LOCAL || false;
 if (process.env.DATABASE_URL && !local) {
   useSSL = true;
 }
-const Pool = pg.Pool;
+//Which db connection to use
+const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/coffeshop';
 const pool = new Pool({
   connectionString,
   ssl: useSSL
 });
-//Logins
-const LoginsFactory = require('./services/logins-factory')
-const LoginsRoutes = require('./routes/logins-routes')
+
 const loginsFactory = LoginsFactory(pool)
-const loginsRoutes = LoginsRoutes(loginsFactory)
-//Waiters
-const WaitersFactory = require('./services/waiters-factory')
-const WaitersRoutes = require('./routes/waiters-routes')
 const waitersFactory = WaitersFactory(pool)
+const loginsRoutes = LoginsRoutes(loginsFactory)
 const waitersRoutes = WaitersRoutes(waitersFactory)
-//Routes
+
+app.use(session({
+  secret: "<add a secret string here>",
+  resave: false,
+  saveUninitialized: true
+}));
+//Flashmessaging
+app.use(flash());
+//Handlebars
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
+app.use(express.static(__dirname + '/public'));
+//Bodyparser
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+//Logins Routes
 //app.get("/", mockRoutes.sendRoute);
-app.get('/', loginsRoutes.homeRoute);
+app.get('/', loginsRoutes.primary);
+app.get('/about', loginsRoutes.aboutRoute)
+app.get('/home', loginsRoutes.homeRoute)
 app.post('/aPostRoute', loginsRoutes.aPostRoute);
+//Waiters Routes
 
-let PORT = process.env.PORT || 4007;
+let portNumber = process.env.PORT || 4007;
 
-app.listen(PORT, function () {
-  console.log('App starting on port', PORT);
+app.listen(portNumber, function () {
+  console.log('App starting on port', portNumber);
 });
