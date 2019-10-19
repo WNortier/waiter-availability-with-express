@@ -38,15 +38,20 @@ const pool = new Pool({
   connectionString,
   ssl: useSSL
 });
-//Factories
-const MockFactory = require('./services/mock-factory')
-const MockRoutes = require('./routes/mock-routes')
-const mockFactory = MockFactory(pool)
-const mockRoutes = MockRoutes(mockFactory)
+//Logins
+const LoginsFactory = require('./services/logins-factory')
+const LoginsRoutes = require('./routes/logins-routes')
+const loginsFactory = LoginsFactory(pool)
+const loginsRoutes = LoginsRoutes(loginsFactory)
+//Waiters
+const WaitersFactory = require('./services/waiters-factory')
+const WaitersRoutes = require('./routes/waiters-routes')
+const waitersFactory = WaitersFactory(pool)
+const waitersRoutes = WaitersRoutes(waitersFactory)
 //Routes
 //app.get("/", mockRoutes.sendRoute);
-app.get('/', mockRoutes.homeRoute);
-app.post('/aPostRoute', mockRoutes.aPostRoute);
+app.get('/', loginsRoutes.homeRoute);
+app.post('/aPostRoute', loginsRoutes.aPostRoute);
 
 let PORT = process.env.PORT || 4007;
 
