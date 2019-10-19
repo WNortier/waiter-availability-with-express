@@ -1,13 +1,13 @@
 assert = require("assert");
-const MockFactory = require("../factoryfunction");
+const LoginsFactory = require("../services/logins-factory");
 
 
 
 describe("Greeting function", function () {
     it("should perform a greeting", function () {
-        const mockTest = MockFactory();
+        const loginsFactory = LoginsFactory();
 
         mockTest.greet("Warwick")
-        assert.equal("Hello Warwick", mockTest.getGreet())
+        assert.equal("Hello Warwick", loginsFactory.getGreet())
     });
 });

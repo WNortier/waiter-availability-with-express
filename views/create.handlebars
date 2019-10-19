@@ -4,33 +4,31 @@
 
 <div class="row col-12 center">
     <div class="col-4"></div>
-    <div class="col-4 signInBlock">
+    <div class="col-4 createBlock">
         <div class="row">
             <div class="col-12">
-                <h2>Sign In</h2>
+                <h3>Create Account</h3>
             </div>
         </div>
-        <form class="" action="/login" method="POST">
+        <form class="" action="/creation" method="POST">
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="anInput" autocomplete="off" placeholder="Username">
+                    <input type="text" name="username" autocomplete="off" placeholder="Username">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <input type="text" name="anotherInput" autocomplete="off" placeholder="Password">
+                    <input type="text" name="password" autocomplete="off" placeholder="Password">
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-12">
+                    <input type="text" name="email" autocomplete="off" placeholder="Email">
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button type="submit" id="login-button">Submit</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <a href="/create">
-                        <h5>Need an account?<br>Click here to get started</h5>
-                    </a>
+                    <button type="submit">Submit</button>
                 </div>
             </div>
         </form>

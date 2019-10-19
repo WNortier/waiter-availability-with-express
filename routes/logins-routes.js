@@ -4,7 +4,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
     //     res.send("Basic ExpressJS Server Template");
     // }
 
-    async function primary(req, res, next) {
+    async function home(req, res, next) {
         try {
             res.render("home", {
                 test: loginsFactory.helloWorld()
@@ -14,19 +14,25 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
-    async function aPostRoute(req, res, next) {
+    async function login(req, res, next) {
         try {
             let inputOne = req.body.anInput
             console.log(inputOne)
+            await loginsFactory.passwordHasher(inputOne);           
             let inputTwo = req.body.anotherInput
             console.log(inputTwo)
-            res.redirect("/");
+            // if (inputOne == "a"){
+            //     res.render("waiters")
+            // } else {
+            //     res.render("manager")
+            // }
+            res.redirect("/")
         } catch (err) {
             next(err);
         }
     }
 
-    async function aboutRoute(req, res, next) {
+    async function about(req, res, next) {
         try {
             res.render("about");
         } catch (err) {
@@ -34,7 +40,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
-    async function homeRoute(req, res, next) {
+    async function returnHome(req, res, next) {
         try {
             res.redirect("/");
         } catch (err) {
@@ -42,11 +48,20 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
+    async function create(req, res, next) {
+        try {
+            res.render("create");
+        } catch (err) {
+            next(err);
+        }
+    }
+
     return {
-        //sendRoute,
-        primary,
-        aPostRoute,
-        aboutRoute,
-        homeRoute
+        //send,
+        home,
+        login,
+        about,
+        returnHome,
+        create
     }
 }

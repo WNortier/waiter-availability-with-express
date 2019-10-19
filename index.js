@@ -49,10 +49,11 @@ app.use(bodyParser.json())
 
 //Logins Routes
 //app.get("/", mockRoutes.sendRoute);
-app.get('/', loginsRoutes.primary);
-app.get('/about', loginsRoutes.aboutRoute)
-app.get('/home', loginsRoutes.homeRoute)
-app.post('/aPostRoute', loginsRoutes.aPostRoute);
+app.get('/', loginsRoutes.home);
+app.get('/home', loginsRoutes.returnHome)
+app.get('/about', loginsRoutes.about)
+app.get('/create', loginsRoutes.create)
+app.post('/login', loginsRoutes.login);
 //Waiters Routes
 
 let portNumber = process.env.PORT || 4007;

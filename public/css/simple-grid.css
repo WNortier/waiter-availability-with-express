@@ -8,13 +8,18 @@ body {
   top: 0;
   font-size: 100%;
   background-color: darkgoldenrod;
+  background-image: linear-gradient(darkgoldenrod, darkgrey);
+  /*Added these attributes to enable thhe gradient background when resizing*/
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* ROOT FONT STYLES */
 
 * {
   font-family: 'Lato', Helvetica, sans-serif;
-  color: #333447;
+  /* color: #333447; */
+  color: rgb(208, 205, 198);
   line-height: 1.5;
 }
 
@@ -165,22 +170,26 @@ p {
 }
 
 .row::after {
-	content: "";
-	display: table;
-	clear: both;
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .hidden-sm {
   display: none;
 }
 
-@media only screen and (min-width: 33.75em) {  /* 540px */
+@media only screen and (min-width: 33.75em) {
+
+  /* 540px */
   .container {
     width: 80%;
   }
 }
 
-@media only screen and (min-width: 45em) {  /* 720px */
+@media only screen and (min-width: 45em) {
+
+  /* 720px */
   .col-1 {
     width: 4.33%;
   }
@@ -234,7 +243,9 @@ p {
   }
 }
 
-@media only screen and (min-width: 60em) { /* 960px */
+@media only screen and (min-width: 60em) {
+
+  /* 960px */
   .container {
     width: 75%;
     max-width: 60rem;
@@ -245,23 +256,68 @@ table {
   border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
   border: 1px solid black;
 }
 
 a {
-  text-decoration:none
+  text-decoration: none
 }
 
-.header {
-  background-color: darkgray;
+input{
+  height: 1.8em;
+  font-size: 1em;
+  color: black;
+}
+
+input[type=text]:focus {
+  background-color: lightblue;
+}
+
+button {
+  color: black;
+  padding: 0.5em 0.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  cursor: pointer;
+  border: 2px solid rgb(49, 135, 163);
+  border-radius: 5px;
+}
+
+.headerBlock {
+  background-color: rgb(49, 52, 54);
   border-radius: 30px;
   border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
 
+.signInBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
+
+.createBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
+
+.aboutBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
 }
 
 .mainSpacer {
-  height: 10em;
+  height: 7em;
 }
 
 .inputSpacers {
@@ -270,4 +326,13 @@ a {
 
 .generalSpacer {
   height: 3em;
+}
+
+form.submitted .ng-invalid
+{
+    border:1px solid #f00;
+}
+
+.custom {
+  cursor: url("./GhostlyArrow.cur"), auto;
 }
