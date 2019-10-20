@@ -1,13 +1,10 @@
 assert = require("assert");
 const LoginsFactory = require("../services/logins-factory");
+const WaitersFactory = require("../services/waiters-factory")
 
-
-
-describe("Greeting function", function () {
+describe("password hasher", function () {
     it("should perform a greeting", function () {
         const loginsFactory = LoginsFactory();
-
-        mockTest.greet("Warwick")
-        assert.equal("Hello Warwick", loginsFactory.getGreet())
+        assert.deepEqual({'Hello World!'}, loginsFactory.helloWorld())
     });
 });

@@ -34,7 +34,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
 
     async function about(req, res, next) {
         try {
-            res.render("about");
+            res.render("logins/about");
         } catch (err) {
             next(err);
         }
