@@ -1,41 +1,21 @@
 CREATE TABLE accounts(
-   id serial not null PRIMARY KEY,
-   username VARCHAR (50) NOT NULL,
-   password VARCHAR (50) NOT NULL,
-   email VARCHAR (355) UNIQUE NOT NULL,
-   created_on TIMESTAMP NOT NULL,
+   id serial not null primary key,
+   username text not null,
+   password text not null,
+   email text UNIQUE not null,
+   last_login timestamp
 );
 
 create table waiters(
     id serial not null primary key,
     waiter_username text not null,
-    weekdays_working text
+    weekdays_working text,
+	waiters_id int,
+	foreign key (waiters_id) references accounts(id)
 );
 
-create table managersInfo(
+create table info(
 	id serial not null primary key,
 	weekday text not null,
     waiters_for_day int not null
 );
-
-
-
-create table towns(
-	id serial not null primary key,
-	town_name text not null,
-	start_string text not null
-);
-
-create table numbers(
-	id serial not null primary key,
-	town_number int not null,
-	town_id int,
-	foreign key (town_id) references towns(id)
-);
-
-create table famousPlaces(
-	id serial not null primary key,
-	famous_place text,
-	famous_id int,
-	foreign key (famous_id) references numbers(town_id)
-)

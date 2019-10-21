@@ -316,8 +316,15 @@ button {
   padding: 1em;
 }
 
+.resetBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
+
 .mainSpacer {
-  height: 7em;
+  height: 4em;
 }
 
 .inputSpacers {

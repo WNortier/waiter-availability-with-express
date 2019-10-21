@@ -1,5 +1,4 @@
 module.exports = function LoginsRoutes(loginsFactory) {
-
     // function sendRoute(req, res, err) {
     //     res.send("Basic ExpressJS Server Template");
     // }
@@ -7,25 +6,20 @@ module.exports = function LoginsRoutes(loginsFactory) {
     async function home(req, res, next) {
         try {
             res.render("home", {
-                test: loginsFactory.helloWorld()
             });
         } catch (err) {
             next(err);
         }
     }
 
-    async function login(req, res, next) {
+    async function getLogin(req, res, next) {
         try {
             let inputOne = req.body.anInput
-            console.log(inputOne)
-            await loginsFactory.passwordHasher(inputOne);           
-            let inputTwo = req.body.anotherInput
-            console.log(inputTwo)
-            // if (inputOne == "a"){
-            //     res.render("waiters")
-            // } else {
-            //     res.render("manager")
-            // }
+            let theHash = await loginsFactory.passwordHasher(inputOne)
+            console.log({theHash})
+            let extractedHash = String(theHash);
+            let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
+            console.log(compareResult)
             res.redirect("/")
         } catch (err) {
             next(err);
@@ -48,7 +42,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
-    async function create(req, res, next) {
+    async function displayCreateAccount(req, res, next) {
         try {
             res.render("create");
         } catch (err) {
@@ -56,12 +50,36 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
+    async function getCreateAccount(req, res, next){
+        try {
+            await loginsFactory.createAccount({
+				username: req.body.username,
+				password: req.body.password,
+				email: req.body.email
+            });
+            res.redirect("displayCreateAccount")
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async function getReset(req, res, next) {
+        try {
+          await loginsFactory.reset()
+          res.redirect('/');
+        } catch (err) {
+          next(err)
+        }
+      }
+
     return {
         //send,
         home,
-        login,
+        getLogin,
         about,
         returnHome,
-        create
+        displayCreateAccount,
+        getCreateAccount,
+        getReset
     }
 }

@@ -20,7 +20,7 @@ if (process.env.DATABASE_URL && !local) {
   useSSL = true;
 }
 //Which db connection to use
-const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/coffeshop';
+const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe';
 const pool = new Pool({
   connectionString,
   ssl: useSSL
@@ -52,8 +52,10 @@ app.use(bodyParser.json())
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)
 app.get('/about', loginsRoutes.about)
-app.get('/create', loginsRoutes.create)
-app.post('/login', loginsRoutes.login);
+app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
+app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
+app.post('/login', loginsRoutes.getLogin);
+app.post("/reset", loginsRoutes.getReset);
 //Waiters Routes
 
 let portNumber = process.env.PORT || 4007;
