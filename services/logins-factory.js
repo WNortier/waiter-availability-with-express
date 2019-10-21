@@ -1,6 +1,6 @@
 module.exports = function LoginsFactory(pool) {
     var bcrypt = require('bcryptjs');
-
+    let hashedpass = "";
     let comparisonResult = "";
 
     // async function passwordHasher(password) {
@@ -26,7 +26,7 @@ module.exports = function LoginsFactory(pool) {
     async function passwordHasher(password) {
         return bcrypt.hash(password, 10).then(hashedpassForRoutes => {
             hashedpass = hashedpassForRoutes
-            return hashedpassForRoutes
+            return hashedpass
         });
     }
 
@@ -38,16 +38,18 @@ module.exports = function LoginsFactory(pool) {
     }
 
     async function createAccount(account) {
-        let hashedpass = "";
+        
         bcrypt.hash(account.password, 10).then(hashedpassForRoutes => {
                 hashedpass = hashedpassForRoutes
-                return hasedpassForRoutes
+                return hashedpass
             });
-        let creationDate = new Date()
+        
+
+        var creationDate = new Date()
         var data = [
             account.username,
-            account.email,
             hashedpass,
+            account.email,
             creationDate
         ];
 

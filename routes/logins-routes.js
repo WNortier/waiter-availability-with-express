@@ -1,7 +1,4 @@
 module.exports = function LoginsRoutes(loginsFactory) {
-    // function sendRoute(req, res, err) {
-    //     res.send("Basic ExpressJS Server Template");
-    // }
 
     async function home(req, res, next) {
         try {
@@ -12,21 +9,7 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
-    async function getLogin(req, res, next) {
-        try {
-            let inputOne = req.body.anInput
-            let theHash = await loginsFactory.passwordHasher(inputOne)
-            console.log({theHash})
-            let extractedHash = String(theHash);
-            let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
-            console.log(compareResult)
-            res.redirect("/")
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    async function about(req, res, next) {
+    async function displayAbout(req, res, next) {
         try {
             res.render("logins/about");
         } catch (err) {
@@ -42,9 +25,27 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
+    async function getLogin(req, res, next) {
+        try {
+            let inputOne = req.body.anInput
+            //let theHash = await loginsFactory.passwordHasher(inputOne)
+           // console.log({theHash})
+            //let extractedHash = String(theHash);
+            //let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
+           // console.log(compareResult)
+            res.redirect("/")
+        } catch (err) {
+            next(err);
+        }
+    }
+
+
+
+
+
     async function displayCreateAccount(req, res, next) {
         try {
-            res.render("create");
+            res.render("logins/create");
         } catch (err) {
             next(err);
         }
@@ -75,9 +76,10 @@ module.exports = function LoginsRoutes(loginsFactory) {
     return {
         //send,
         home,
-        getLogin,
-        about,
         returnHome,
+        getLogin,
+        displayAbout,
+        
         displayCreateAccount,
         getCreateAccount,
         getReset

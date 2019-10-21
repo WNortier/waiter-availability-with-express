@@ -51,7 +51,7 @@ app.use(bodyParser.json())
 //app.get("/", mockRoutes.sendRoute);
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)
-app.get('/about', loginsRoutes.about)
+app.get('/about', loginsRoutes.displayAbout)
 app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
 app.post('/login', loginsRoutes.getLogin);
