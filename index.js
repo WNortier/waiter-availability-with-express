@@ -48,13 +48,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 //Logins Routes
-//app.get("/", mockRoutes.sendRoute);
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)
 app.get('/about', loginsRoutes.displayAbout)
+app.post('/login', loginsRoutes.getLogin);
 app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
-app.post('/login', loginsRoutes.getLogin);
 app.post("/reset", loginsRoutes.getReset);
 //Waiters Routes
 

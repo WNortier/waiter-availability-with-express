@@ -266,7 +266,7 @@ a {
   text-decoration: none
 }
 
-input{
+input {
   height: 1.8em;
   font-size: 1em;
   color: black;
@@ -323,6 +323,13 @@ button {
   padding: 1em;
 }
 
+.managerBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
+
 .mainSpacer {
   height: 4em;
 }
@@ -335,11 +342,28 @@ button {
   height: 3em;
 }
 
-form.submitted .ng-invalid
-{
-    border:1px solid #f00;
+form.submitted .ng-invalid {
+  border: 1px solid #f00;
 }
 
 .custom {
   cursor: url("./GhostlyArrow.cur"), auto;
+}
+
+.weekdayBlockDivs {
+  font-family: monospace;
+  font-size: 50px;
+  border: rgb(224, 92, 0) 3px solid;
+  border-radius: 2px;
+  border-width: 2px;
+  margin-right: 20px;
+  width: 130px;
+  height: 110px;
+  background-color: rgb(23, 64, 77);
+  display: inline-block;
+}
+
+.weekdayBlockDivs p {
+  display: inline-block;
+
 }

@@ -28,20 +28,22 @@ module.exports = function LoginsRoutes(loginsFactory) {
     async function getLogin(req, res, next) {
         try {
             let inputOne = req.body.anInput
+            if (inputOne == ""){
+                res.render("staff/waiters")
+            } else if (inputOne = "a"){
+                res.render("staff/manager")
+            }
+            
             //let theHash = await loginsFactory.passwordHasher(inputOne)
            // console.log({theHash})
             //let extractedHash = String(theHash);
             //let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
            // console.log(compareResult)
-            res.redirect("/")
+
         } catch (err) {
             next(err);
         }
     }
-
-
-
-
 
     async function displayCreateAccount(req, res, next) {
         try {

@@ -1,6 +1,5 @@
 module.exports = function LoginsFactory(pool) {
     var bcrypt = require('bcryptjs');
-    let hashedpass = "";
     let comparisonResult = "";
 
     // async function passwordHasher(password) {
@@ -23,38 +22,42 @@ module.exports = function LoginsFactory(pool) {
     //     })
     // }
 
-    async function passwordHasher(password) {
-        return bcrypt.hash(password, 10).then(hashedpassForRoutes => {
-            hashedpass = hashedpassForRoutes
-            return hashedpass
-        });
-    }
+    // async function passwordHasher(password) {
+    //     return bcrypt.hash(password, 10).then(hashedpassForRoutes => {
+    //         hashedpass = hashedpassForRoutes
+    //         return hashedpass
+    //     });
+    // }
 
-    async function passwordComparer(password, hashed) {
-        return bcrypt.compare(password, hashed).then(matchOrNoMatch => {
-            comparisonResult = matchOrNoMatch;
-            return comparisonResult
-        });
-    }
+    // async function passwordComparer(password, hashed) {
+    //     return bcrypt.compare(password, hashed).then(matchOrNoMatch => {
+    //         comparisonResult = matchOrNoMatch;
+    //         return comparisonResult
+    //     });
+    // }
 
     async function createAccount(account) {
-        
-        bcrypt.hash(account.password, 10).then(hashedpassForRoutes => {
+        let hashedpass = "";
+        await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
                 hashedpass = hashedpassForRoutes
-                return hashedpass
+                //csoneole.log(hashedpass)
+                return hashedpassForRoutes
             });
-        
-
-        var creationDate = new Date()
-        var data = [
+        let AccountCreationDate = new Date()
+        let accountData = [
             account.username,
-            hashedpass,
             account.email,
-            creationDate
+            hashedpass,
+            AccountCreationDate
         ];
-
-        return pool.query(`insert into accounts(username, email, password, date_created) 
-        values ($1, $2, $3, $4)`, data);
+        await pool.query(`insert into accounts(username, email, password, date_created) 
+        values ($1, $2, $3, $4)`, accountData);
+        let emailArray = []; emailArray.push(account.email)
+        let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
+        let foreignKey = primaryKeyExtraction.rows[primaryKeyExtraction.rowCount - 1].id
+        let waiterArray = []; waiterArray[0] = account.username; waiterArray[1] = foreignKey 
+        await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
+        return true
     }
 
     async function reset() {
@@ -65,8 +68,8 @@ module.exports = function LoginsFactory(pool) {
 
 
     return {
-        passwordHasher,
-        passwordComparer,
+        // passwordHasher,
+        // passwordComparer,
         createAccount,
         reset
     }
