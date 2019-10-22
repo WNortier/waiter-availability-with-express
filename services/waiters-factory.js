@@ -1,10 +1,10 @@
 module.exports = function WaiterFactory(pool) {
 
-    function helloWorld() {
+    function workdaySubmission() {
         return "Hello World!"
     }
 
     return {
-        helloWorld
+        workdaySubmission
     }
 }

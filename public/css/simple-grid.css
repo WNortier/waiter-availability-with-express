@@ -330,6 +330,13 @@ button {
   padding: 1em;
 }
 
+.waiterBlock {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: 3px solid rgb(49, 135, 163);
+  padding: 1em;
+}
+
 .mainSpacer {
   height: 4em;
 }
@@ -366,4 +373,9 @@ form.submitted .ng-invalid {
 .weekdayBlockDivs p {
   display: inline-block;
 
+}
+
+label {
+  font-size: 1.525rem; 
+  font-weight: bold;
 }

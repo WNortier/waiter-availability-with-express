@@ -3,37 +3,52 @@
 </div>
 
 <div class="row col-12 center">
-    <div class="col-4"></div>
-    <div class="col-4 signInBlock">
+    <div class="col-1"></div>
+    <div class="col-10 waiterBlock">
         <div class="row">
             <div class="col-12">
                 <h2>Waiter</h2>
+                <div class="row">
+                    <div class="col-12 center">
+                        <form action="/getWorkdays" id="getWorkdays" method="POST">
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Monday">
+                                <label>Monday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Tuesday">
+                                <label>Tuesday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Wednesday">
+                                <label>Wednesday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Thursday">
+                                <label>Thursday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Friday">
+                                <label>Friday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Saturday">
+                                <label>Saturday</label>
+                            </span>
+                            <span>
+                                <input type="radio" name="workday" class="#" value="Sunday">
+                                <label>Sunday</label>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <form method="POST">
+                            <button type="submit" form="getWorkdays">Submit</button>
+                        </form>
+                    </div>
+                </div>
             </div>
+            <div class="col-4"></div>
         </div>
-        {{!-- <form class="" action="/login" method="POST">
-            <div class="row">
-                <div class="col-12">
-                    <input type="text" name="anInput" autocomplete="off" placeholder="Username">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <input type="text" name="anotherInput" autocomplete="off" placeholder="Password">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <button type="submit" id="login-button">Submit</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <a href="/create">
-                        <h5>Need an account?<br>Click here to get started</h5>
-                    </a>
-                </div>
-            </div>
-        </form> --}}
-    </div>
-    <div class="col-4"></div>
-</div>

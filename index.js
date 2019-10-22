@@ -56,6 +56,7 @@ app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
 app.post("/reset", loginsRoutes.getReset);
 //Waiters Routes
+app.post("/getWorkdays", waitersRoutes.getWorkdays)
 
 let portNumber = process.env.PORT || 4007;
 

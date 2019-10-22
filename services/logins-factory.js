@@ -60,17 +60,42 @@ module.exports = function LoginsFactory(pool) {
         return true
     }
 
+    async function login(email){
+        let emailArray = []; emailArray.push(email)
+        let waiterDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
+        //console.log(waiterDataExtraction)
+        return waiterDataExtraction.rows
+    }
+
     async function reset() {
         await pool.query(`delete from info`)
         await pool.query(`delete from waiters`)
         await pool.query(`delete from accounts`)
     }
 
+    async function accountsTestAssistant() {
+        let databaseAccounts = await pool.query(`SELECT * from accounts`);
+        return databaseAccounts.rows;
+    }
+
+    async function waitersTestAssistant() {
+        let databaseWaiters = await pool.query(`SELECT * from waiters`);
+        return databaseWaiters.rows;
+    }
+
+    async function infoTestAssistant() {
+        let databaseInfo = await pool.query(`SELECT * from info`);
+        return databaseInfo.rows;
+    }
 
     return {
         // passwordHasher,
         // passwordComparer,
         createAccount,
-        reset
+        login,
+        reset,
+        accountsTestAssistant,
+        waitersTestAssistant,
+        infoTestAssistant
     }
 }
