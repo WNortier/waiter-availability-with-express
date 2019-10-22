@@ -26,7 +26,11 @@ describe('createAccount function', function () {
     });
     it('should populate the accounts table with a new user account', async function () {
         let loginsFactory = LoginsFactory(pool)
-        let accountData = {username: "Warwick", password: "Qwerty", email: "warwick.nortier@gmail.com"}
+        let accountData = {
+            username: "Warwick",
+            password: "Qwerty",
+            email: "warwick.nortier@gmail.com"
+        }
         await loginsFactory.createAccount(accountData)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
@@ -35,9 +39,9 @@ describe('createAccount function', function () {
         assert.equal("Warwick", accountExtraction[0].username)
         assert.equal("warwick.nortier@gmail.com", accountExtraction[0].email)
         assert.equal(idForFirstAccount, accountExtraction[0].id)
-        assert.equal(1, waitersExtraction.length)
-        assert.equal("Warwick", waitersExtraction[0].waiter_username)
-        assert.equal(idForFirstAccount, waitersExtraction[0].waiters_id)
+        // assert.equal(1, waitersExtraction.length)
+        // assert.equal("Warwick", waitersExtraction[0].waiter_username)
+        // assert.equal(idForFirstAccount, waitersExtraction[0].waiters_id)
     });
 });
 
@@ -49,9 +53,14 @@ describe('login function', function () {
     });
     it('should return all account data on the user logging in for rendering purposes', async function () {
         let loginsFactory = LoginsFactory(pool)
-        let accountData = {username: "Warwick", password: "Qwerty", email: "warwick.nortier@gmail.com"}
+        let accountData = {
+            username: "Warwick",
+            password: "Qwerty",
+            email: "warwick.nortier@gmail.com"
+        }
         await loginsFactory.createAccount(accountData)
         let loginData = await loginsFactory.login("warwick.nortier@gmail.com")
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         assert.equal("Warwick", loginData[0].username)
         assert.equal("warwick.nortier@gmail.com", loginData[0].email)
@@ -59,23 +68,37 @@ describe('login function', function () {
     });
 });
 
-// describe('login function', function () {
-//     beforeEach(async function () {
-//         await pool.query(`delete from info`);
-//         await pool.query(`delete from waiters`);
-//         await pool.query(`delete from accounts`);
-//     });
-//     it('should return all account data on the user logging in for rendering purposes', async function () {
-//         let loginsFactory = LoginsFactory(pool)
-//         let accountData = {username: "Warwick", password: "Qwerty", email: "warwick.nortier@gmail.com"}
-//         await loginsFactory.createAccount(accountData)
-//         let loginData = await loginsFactory.login("warwick.nortier@gmail.com")
-//         let idForFirstAccount = accountExtraction[0].id
-//         assert.equal("Warwick", loginData[0].username)
-//         assert.equal("warwick.nortier@gmail.com", loginData[0].email)
-//         assert.equal(idForFirstAccount, loginData[0].id)
-//     });
-// });
+describe('login function', function () {
+    beforeEach(async function () {
+        await pool.query(`delete from info`);
+        await pool.query(`delete from waiters`);
+        await pool.query(`delete from accounts`);
+    });
+    it('should populate the waiters table based on workdays selected', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwerty",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        let idForFirstAccount = accountExtraction[0].id
+        await waitersFactory.waitersShiftsPopulator("Monday", idForFirstAccount)
+            .then(await waitersFactory.waitersShiftsPopulator("Tuesday", idForFirstAccount))
+            .then(await waitersFactory.waitersShiftsPopulator("Wednesday", idForFirstAccount))
+            .then(await waitersFactory.waitersShiftsPopulator("Thursday", idForFirstAccount))
+            .then(await waitersFactory.waitersShiftsPopulator("Friday", idForFirstAccount))
+            .then(await waitersFactory.waitersShiftsPopulator("Saturday", idForFirstAccount))
+            .then(await waitersFactory.waitersShiftsPopulator("Sunday", idForFirstAccount))
+
+        //let loginData = await loginsFactory.login("warwick.nortier@gmail.com")
+        // assert.equal("Warwick", loginData[0].username)
+        // assert.equal("warwick.nortier@gmail.com", loginData[0].email)
+        // assert.equal(idForFirstAccount, loginData[0].id)i
+    });
+});
 
 after(function () {
     pool.end();

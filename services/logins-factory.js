@@ -56,7 +56,7 @@ module.exports = function LoginsFactory(pool) {
         let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
         let foreignKey = primaryKeyExtraction.rows[primaryKeyExtraction.rowCount - 1].id
         let waiterArray = []; waiterArray[0] = account.username; waiterArray[1] = foreignKey 
-        await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
+        //await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
         return true
     }
 
