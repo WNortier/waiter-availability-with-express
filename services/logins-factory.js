@@ -83,11 +83,6 @@ module.exports = function LoginsFactory(pool) {
         return databaseWaiters.rows;
     }
 
-    async function infoTestAssistant() {
-        let databaseInfo = await pool.query(`SELECT * from info`);
-        return databaseInfo.rows;
-    }
-
     return {
         // passwordHasher,
         // passwordComparer,
@@ -95,7 +90,6 @@ module.exports = function LoginsFactory(pool) {
         login,
         reset,
         accountsTestAssistant,
-        waitersTestAssistant,
-        infoTestAssistant
+        waitersTestAssistant
     }
 }

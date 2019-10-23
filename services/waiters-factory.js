@@ -106,14 +106,107 @@ module.exports = function WaiterFactory(pool) {
         return true
     }
 
+
+    async function shiftsAndDayMatcher(){
+    var waiterAvailabilityByColorDivPrinter = [
+        { day: 'Mon', style: "rgb(23, 64, 77)" },                                                                                //, style: ''
+        { day: 'Tue', style: "rgb(23, 64, 77)" },
+        { day: 'Wed', style: "rgb(23, 64, 77)" },
+        { day: 'Thu', style: "rgb(23, 64, 77)" },
+        { day: 'Fri', style: "rgb(23, 64, 77)" },
+        { day: 'Sat', style: "rgb(23, 64, 77)" },
+        { day: 'Sun', style: "rgb(23, 64, 77)" },
+    ];
+
+    // var infoTableDataReference = [ { id: 57, weekday: 'Monday', waiters_for_day: 2 },
+    //     { id: 58, weekday: 'Tuesday', waiters_for_day: 1 },
+    //     { id: 59, weekday: 'Wednesday', waiters_for_day: 0 },
+    //     { id: 60, weekday: 'Thursday', waiters_for_day: 0 },
+    //     { id: 61, weekday: 'Friday', waiters_for_day: 0 },
+    //     { id: 62, weekday: 'Saturday', waiters_for_day: 0 },
+    //     { id: 63, weekday: 'Sunday', waiters_for_day: 0 }]
+
+    let infoTableDataExtraction = await pool.query(`SELECT weekday, waiters_for_day FROM info`)
+    let infoTableData = infoTableDataExtraction.rows
+    
+    console.log(infoTableData)
+
+    
+
+    if (infoTableData[0].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[0].style = "green"
+    } else if (infoTableData[0].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[0].style = "red"
+    }
+    if (infoTableData[1].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[1].style = "green"
+    } else if (infoTableData[1].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[1].style = "red"
+    }
+    if (infoTableData[2].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[2].style = "green"
+    } else if (infoTableData[2].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[2].style = "red"
+    }
+    if (infoTableData[3].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[3].style = "green"
+    } else if (infoTableData[3].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[3].style = "red"
+    }
+    if (infoTableData[4].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[4].style = "green"
+    } else if (infoTableData[4].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[4].style = "red"
+    }
+    if (infoTableData[5].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[5].style = "green"
+    } else if (infoTableData[5].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[5].style = "red"
+    }
+    if (infoTableData[6].waiters_for_day == 3){
+        waiterAvailabilityByColorDivPrinter[6].style = "green"
+    } else if (infoTableData[6].waiters_for_day > 3){
+        waiterAvailabilityByColorDivPrinter[6].style = "red"
+    }
+
+
+
+    
+    
+    return shiftsAndDayMatcher
+}
+
+// for(var i=0;i<=vm.array1.length;i++)
+// {
+//     for(var j=0;j<=vm.array2.length;j++)
+//     {
+//         if(i==j)
+//         vm.save(vm.array1[i].content1,vm.array2[j].content2){
+
+//         }
+//     }
+// }
+
+
+
+
+ 
+
     async function errorTestAssistant() {
         return errorMessage
+    }
+
+    async function infoTestAssistant() {
+        let databaseInfo = await pool.query(`SELECT * from info`);
+        return databaseInfo.rows;
     }
 
     return {
         shiftsPopulator,
         dayCounter,
-        errorTestAssistant
+        errorTestAssistant,
+        infoTestAssistant,
+        shiftsAndDayMatcher
     }
 }
 
@@ -133,7 +226,7 @@ module.exports = function WaiterFactory(pool) {
             {{/each}}
         </div> */
 
-// function dateAndDayMatcher(firstDayPrefix, secondDayPrefix) {
+// function shiftsAndDayMatcher(firstDayPrefix, secondDayPrefix) {
 //     var waiterAvailabilityByColorObject = [
 //         { day: 'Mon', style: "rgb(23, 64, 77)" },                                                                                //, style: ''
 //         { day: 'Tue', style: "rgb(23, 64, 77)" },
