@@ -103,7 +103,7 @@ const pool = new Pool({
 //     });
 // });
 
-describe('shiftsPopulator function', function () {
+// describe('shiftsPopulator function', function () {
     // beforeEach(async function () {
     //     await pool.query(`delete from info`);
     //     await pool.query(`delete from waiters`);
@@ -128,13 +128,40 @@ describe('shiftsPopulator function', function () {
     //         .then(await waitersFactory.shiftsPopulator("Saturday", idForFirstAccount))
     //         .then(await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount))
     // });
+//     beforeEach(async function () {
+//         await pool.query(`delete from info`);
+//         await pool.query(`delete from waiters`);
+//         await pool.query(`delete from accounts`);
+//     });
+
+//     it('should populate the waiters table based on workdays selected and prevent duplicate days', async function () {
+//         let loginsFactory = LoginsFactory(pool)
+//         let waitersFactory = WaitersFactory(pool)
+//         let accountData = {
+//             username: "Warwick",
+//             password: "Qwerty",
+//             email: "warwick.nortier@gmail.com"
+//         }
+//         await loginsFactory.createAccount(accountData)
+//         let accountExtraction = await loginsFactory.accountsTestAssistant()
+//         let idForFirstAccount = accountExtraction[0].id
+//         await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
+//         await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
+//         let waitersExtraction = await loginsFactory.waitersTestAssistant()
+//         let error = await waitersFactory.errorTestAssistant()
+//         assert.equal(1, waitersExtraction.length)
+//         assert.equal("That weekday has already been entered!", error)
+//     });
+// });
+
+describe('infoPopulator function', function () {
     beforeEach(async function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
         await pool.query(`delete from accounts`);
     });
 
-    it('should populate the waiters table based on workdays selected and prevent duplicate days', async function () {
+    it('should populate the info table based on the information contained in the waiters table', async function () {
         let loginsFactory = LoginsFactory(pool)
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
@@ -142,20 +169,24 @@ describe('shiftsPopulator function', function () {
             password: "Qwerty",
             email: "warwick.nortier@gmail.com"
         }
+        let accountDataTwo = {
+            username: "Frank",
+            password: "Qwerty",
+            email: "frank@gmail.com"
+        }
         await loginsFactory.createAccount(accountData)
+        await loginsFactory.createAccount(accountDataTwo)
+        //await loginsFactory.createAccount(accountDataThree)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
-
         let idForFirstAccount = accountExtraction[0].id
-
+        let idForSecondAccount = accountExtraction[1].id
         await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-        .then(await waitersFactory.shiftsPopulator("Monday", idForFirstAccount))
+        await waitersFactory.shiftsPopulator("Monday", idForSecondAccount)
+        await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount)
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
-        let error = await waitersFactory.errorTestAssistant()
-        // .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
-        // .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
-        //assert.equal(1, accountExtraction.length);
-        assert.equal(1, waitersExtraction.length)
-        assert.equal("That weekday has already been entered!", error)
+        //let error = await waitersFactory.errorTestAssistant()
+        assert.equal(3, waitersExtraction.length)
+        let infoExtraction = await waitersFactory.dayCounter()
     });
 });
 
