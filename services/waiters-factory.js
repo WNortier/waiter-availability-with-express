@@ -208,9 +208,10 @@ module.exports = function WaiterFactory(pool) {
 
     let infoTableDataExtraction = await pool.query(`SELECT weekday, waiters_for_day FROM info`)
     let infoTableData = infoTableDataExtraction.rows
+    let infoTableDataRowCount = infoTableDataExtraction.rowCount
 
     console.log(infoTableData)
-
+if (infoTableDataRowCount > 0){
     if (infoTableData[0].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[0].style = "green"
     } else if (infoTableData[0].waiters_for_day > 3) {
@@ -246,6 +247,7 @@ module.exports = function WaiterFactory(pool) {
     } else if (infoTableData[6].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[6].style = "red"
     }
+}
 
     console.log(waiterAvailabilityByColorDivPrinter)
 

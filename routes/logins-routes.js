@@ -1,9 +1,8 @@
-module.exports = function LoginsRoutes(loginsFactory) {
+module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
 
     async function home(req, res, next) {
         try {
-            res.render("home", {
-            });
+            res.render("home", {});
         } catch (err) {
             next(err);
         }
@@ -28,27 +27,36 @@ module.exports = function LoginsRoutes(loginsFactory) {
     async function getLogin(req, res, next) {
         try {
             let emailInput = req.body.anInput
-      res.render("staff/waiters", {
-        accountInfo: await loginsFactory.login(emailInput)
-      });
-            
-            //EASYENTRY
 
-            // if (emailInput == ""){
-            //     res.render("staff/waiters")
-            // } else if (emailInput = "a"){
-            //     res.render("staff/manager")
-            // }
-            
-            //let theHash = await loginsFactory.passwordHasher(inputOne)
-           // console.log({theHash})
-            //let extractedHash = String(theHash);
-            //let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
-           // console.log(compareResult)
-
+            if (emailInput == "z" || emailInput == "x" || emailInput == "c" || emailInput == "d") {
+                res.render("staff/waiters", {
+                    accountInfo: await loginsFactory.login(emailInput)
+                });
+            } else {
+                res.render("staff/manager", {
+                    shiftDays: await waitersFactory.shiftsAndDayMatcher()
+                });
+            }
         } catch (err) {
             next(err);
         }
+
+
+        //EASYENTRY
+
+        // if (emailInput == ""){
+        //     res.render("staff/waiters")
+        // } else if (emailInput = "a"){
+        //     res.render("staff/manager")
+        // }
+
+        //let theHash = await loginsFactory.passwordHasher(inputOne)
+        // console.log({theHash})
+        //let extractedHash = String(theHash);
+        //let compareResult = await loginsFactory.passwordComparer(inputOne, extractedHash)   
+        // console.log(compareResult)
+
+
     }
 
     async function displayCreateAccount(req, res, next) {
@@ -59,12 +67,12 @@ module.exports = function LoginsRoutes(loginsFactory) {
         }
     }
 
-    async function getCreateAccount(req, res, next){
+    async function getCreateAccount(req, res, next) {
         try {
             await loginsFactory.createAccount({
-				username: req.body.username,
-				password: req.body.password,
-				email: req.body.email
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email
             });
             res.redirect("displayCreateAccount")
         } catch (err) {
@@ -74,20 +82,19 @@ module.exports = function LoginsRoutes(loginsFactory) {
 
     async function getReset(req, res, next) {
         try {
-          await loginsFactory.reset()
-          res.redirect('/');
+            await loginsFactory.reset()
+            res.redirect('/');
         } catch (err) {
-          next(err)
+            next(err)
         }
-      }
+    }
 
     return {
-        //send,
         home,
         returnHome,
         getLogin,
         displayAbout,
-        
+
         displayCreateAccount,
         getCreateAccount,
         getReset

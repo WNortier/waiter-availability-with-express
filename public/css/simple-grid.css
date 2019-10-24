@@ -379,3 +379,11 @@ label {
   font-size: 1.525rem; 
   font-weight: bold;
 }
+
+#red {
+  background-color: red;
+}
+
+#green {
+  background-color: green;
+}

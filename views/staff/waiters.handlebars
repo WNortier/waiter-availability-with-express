@@ -46,9 +46,12 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
+                        {{#accountInfo}}
                         <form method="POST">
                             <button type="submit" form="getWorkdays">Submit</button>
+                            <button type="submit" formaction="/getWorkdays/reset/{{id}}{{email}}">Reset</button>
                         </form>
+                        {{/accountInfo}}
                     </div>
                 </div>
             </div>

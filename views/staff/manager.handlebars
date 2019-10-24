@@ -10,8 +10,13 @@
                 <h2>Manager</h2>
 
                 <div class="col-12 center">
-
-                    <div class="weekdayBlockDivs" id="#">
+                    
+                    {{#each shiftDays}}
+                    <div class="weekdayBlockDivs" id="{{style}}">
+                        <p>{{day}}</p>
+                    </div>
+                    {{/each}}
+                    {{!-- <div class="weekdayBlockDivs" id="#">
                         <p>Mon</p>
                     </div>
 
@@ -37,7 +42,7 @@
 
                     <div class="weekdayBlockDivs" id="#">
                         <p>Sun</p>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>
