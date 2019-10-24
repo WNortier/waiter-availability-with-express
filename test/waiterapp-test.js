@@ -104,30 +104,30 @@ describe('login function', function () {
 });
 
 describe('shiftsPopulator function', function () {
-beforeEach(async function () {
-    await pool.query(`delete from info`);
-    await pool.query(`delete from waiters`);
-    await pool.query(`delete from accounts`);
-});
-it('should populate the waiters table based on workdays selected', async function () {
-    let loginsFactory = LoginsFactory(pool)
-    let waitersFactory = WaitersFactory(pool)
-    let accountData = {
-        username: "Warwick",
-        password: "Qwerty",
-        email: "warwick.nortier@gmail.com"
-    }
-    await loginsFactory.createAccount(accountData)
-    let accountExtraction = await loginsFactory.accountsTestAssistant()
-    let idForFirstAccount = accountExtraction[0].id
-    await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-        .then(await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount))
-        .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
-        .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
-        .then(await waitersFactory.shiftsPopulator("Friday", idForFirstAccount))
-        .then(await waitersFactory.shiftsPopulator("Saturday", idForFirstAccount))
-        .then(await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount))
-});
+    beforeEach(async function () {
+        await pool.query(`delete from info`);
+        await pool.query(`delete from waiters`);
+        await pool.query(`delete from accounts`);
+    });
+    it('should populate the waiters table based on workdays selected', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwerty",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        let idForFirstAccount = accountExtraction[0].id
+        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
+            .then(await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount))
+            .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
+            .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
+            .then(await waitersFactory.shiftsPopulator("Friday", idForFirstAccount))
+            .then(await waitersFactory.shiftsPopulator("Saturday", idForFirstAccount))
+            .then(await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount))
+    });
     beforeEach(async function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
@@ -186,7 +186,7 @@ describe('infoPopulator function', function () {
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         //let error = await waitersFactory.errorTestAssistant()
         assert.equal(3, waitersExtraction.length)
-        await waitersFactory.dayCounter()
+        //await waitersFactory.dayCounter()
         let infoExtraction = await waitersFactory.infoTestAssistant()
         assert.equal("Monday", infoExtraction[0].weekday)
         assert.equal(2, infoExtraction[0].waiters_for_day)
@@ -263,7 +263,7 @@ describe('shiftsAndDayMatcher function', function () {
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         //let error = await waitersFactory.errorTestAssistant()
         assert.equal(8, waitersExtraction.length)
-        await waitersFactory.dayCounter()
+        //await waitersFactory.dayCounter()
         await waitersFactory.shiftsAndDayMatcher()
         //let infoExtraction = await waitersFactory.infoTestAssistant()
     });

@@ -23,8 +23,14 @@ module.exports = function WaiterFactory(pool) {
             newWorkDayRowInfo[1] = workday;
             newWorkDayRowInfo[2] = id;
             await pool.query(`INSERT INTO waiters (waiter_username, weekdays_working, waiters_id) VALUES ($1, $2, $3)`, newWorkDayRowInfo);
-            return true
+            return dayCounter()
         }
+    }
+
+    async function resetShiftsForUser(id){
+let idForEntriesToDelete = []
+idForEntriesToDelete.push(id);
+        await pool.query(`DELETE FROM waiters where id = $1`, idForEntriesToDelete)
     }
 
     async function dayCounter() {
@@ -129,9 +135,7 @@ module.exports = function WaiterFactory(pool) {
     let infoTableDataExtraction = await pool.query(`SELECT weekday, waiters_for_day FROM info`)
     let infoTableData = infoTableDataExtraction.rows
     
-    console.log(infoTableData)
-
-    
+    //console.log(infoTableData)
 
     if (infoTableData[0].waiters_for_day == 3){
         waiterAvailabilityByColorDivPrinter[0].style = "green"
@@ -169,10 +173,6 @@ module.exports = function WaiterFactory(pool) {
         waiterAvailabilityByColorDivPrinter[6].style = "red"
     }
 
-
-
-    
-    
     return shiftsAndDayMatcher
 }
 
@@ -186,11 +186,6 @@ module.exports = function WaiterFactory(pool) {
 //         }
 //     }
 // }
-
-
-
-
- 
 
     async function errorTestAssistant() {
         return errorMessage
@@ -206,17 +201,11 @@ module.exports = function WaiterFactory(pool) {
         dayCounter,
         errorTestAssistant,
         infoTestAssistant,
-        shiftsAndDayMatcher
+        shiftsAndDayMatcher,
+        resetShiftsForUser
     }
 }
-
-
-
-
-
 //await pool.query('UPDATE waiters SET weekdays_working = $1 WHERE waiters_id = $2;', weekdayWorking)
-
-
 
 //USE THIS TO COLOR THE DAYS
 /* <div class="col-12 center" id="#">
@@ -225,33 +214,3 @@ module.exports = function WaiterFactory(pool) {
 
             {{/each}}
         </div> */
-
-// function shiftsAndDayMatcher(firstDayPrefix, secondDayPrefix) {
-//     var waiterAvailabilityByColorObject = [
-//         { day: 'Mon', style: "rgb(23, 64, 77)" },                                                                                //, style: ''
-//         { day: 'Tue', style: "rgb(23, 64, 77)" },
-//         { day: 'Wed', style: "rgb(23, 64, 77)" },
-//         { day: 'Thu', style: "rgb(23, 64, 77)" },
-//         { day: 'Fri', style: "rgb(23, 64, 77)" },
-//         { day: 'Sat', style: "rgb(23, 64, 77)" },
-//         { day: 'Sun', style: "rgb(23, 64, 77)" },
-//     ];
-
-
-
-
-//     for (var i in waiterAvailabilityByColorObject) {
-//         if (firstDayPrefix == secondDayPrefix && waiterAvailabilityByColorObject[i].day == firstDayPrefix) {
-//             waiterAvailabilityByColorObject[i].style = "green";
-//         } else if (waiterAvailabilityByColorObject[i].day == firstDayPrefix) {
-//             waiterAvailabilityByColorObject[i].style = "blue"
-//         }
-//     }
-
-//     for (var i in waiterAvailabilityByColorObject) 
-//         if (firstDayPrefix != secondDayPrefix && waiterAvailabilityByColorObject[i].day == secondDayPrefix) {
-//             waiterAvailabilityByColorObject[i].style = "red";
-//         }
-//     }
-//     return waiterAvailabilityByColorObject
-// }
