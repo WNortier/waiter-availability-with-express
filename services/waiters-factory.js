@@ -1,36 +1,36 @@
 module.exports = function WaiterFactory(pool) {
 
-    async function shiftsPopulator(workday, id) {
-        let waiterDataId = [];
-        waiterDataId[0] = id;
-        let accountExtraction = await pool.query(`SELECT * FROM accounts WHERE id = $1`, waiterDataId)
-        let account = accountExtraction.rows;
-        let waiterUsername = account[0].username;
-        //Duplicate day prevention
-        let workdayAndId = [];
-        workdayAndId[0] = workday;
-        workdayAndId[1] = id;
-        let rowCheckExtraction = await pool.query(`SELECT * FROM waiters WHERE (weekdays_working = $1 AND waiters_id = $2)`, workdayAndId)
-        var rowCheck = rowCheckExtraction.rowCount
-        if (rowCheck == 1) {
-            errorMessage = "That weekday has already been entered!"
-            return false
+        async function shiftsPopulator(workday, id) {
+            let waiterDataId = [];
+            waiterDataId[0] = id;
+            let accountExtraction = await pool.query(`SELECT * FROM accounts WHERE id = $1`, waiterDataId)
+            let account = accountExtraction.rows;
+            let waiterUsername = account[0].username;
+            //Duplicate day prevention
+            let workdayAndId = [];
+            workdayAndId[0] = workday;
+            workdayAndId[1] = id;
+            let rowCheckExtraction = await pool.query(`SELECT * FROM waiters WHERE (weekdays_working = $1 AND waiters_id = $2)`, workdayAndId)
+            var rowCheck = rowCheckExtraction.rowCount
+            if (rowCheck == 1) {
+                errorMessage = "That weekday has already been entered!"
+                return false
+            }
+            //If there is no existing row for that day, enter it 
+            else if (rowCheck == 0) {
+                let newWorkDayRowInfo = [];
+                newWorkDayRowInfo[0] = waiterUsername;
+                newWorkDayRowInfo[1] = workday;
+                newWorkDayRowInfo[2] = id;
+                await pool.query(`INSERT INTO waiters (waiter_username, weekdays_working, waiters_id) VALUES ($1, $2, $3)`, newWorkDayRowInfo);
+                return true
+            }
         }
-        //If there is no existing row for that day, enter it 
-        else if (rowCheck == 0) {
-            let newWorkDayRowInfo = [];
-            newWorkDayRowInfo[0] = waiterUsername;
-            newWorkDayRowInfo[1] = workday;
-            newWorkDayRowInfo[2] = id;
-            await pool.query(`INSERT INTO waiters (waiter_username, weekdays_working, waiters_id) VALUES ($1, $2, $3)`, newWorkDayRowInfo);
-            return dayCounter()
-        }
-    }
 
-    async function resetShiftsForUser(id){
-let idForEntriesToDelete = []
-idForEntriesToDelete.push(id);
-        await pool.query(`DELETE FROM waiters where id = $1`, idForEntriesToDelete)
+    async function removeShiftsForUser(id) {
+        let idForEntriesToDelete = []
+        idForEntriesToDelete.push(id);
+        return await pool.query(`DELETE FROM waiters WHERE waiters_id = $1`, idForEntriesToDelete)
     }
 
     async function dayCounter() {
@@ -134,47 +134,49 @@ idForEntriesToDelete.push(id);
 
     let infoTableDataExtraction = await pool.query(`SELECT weekday, waiters_for_day FROM info`)
     let infoTableData = infoTableDataExtraction.rows
-    
-    //console.log(infoTableData)
 
-    if (infoTableData[0].waiters_for_day == 3){
+    console.log(infoTableData)
+
+    if (infoTableData[0].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[0].style = "green"
-    } else if (infoTableData[0].waiters_for_day > 3){
+    } else if (infoTableData[0].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[0].style = "red"
     }
-    if (infoTableData[1].waiters_for_day == 3){
+    if (infoTableData[1].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[1].style = "green"
-    } else if (infoTableData[1].waiters_for_day > 3){
+    } else if (infoTableData[1].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[1].style = "red"
     }
-    if (infoTableData[2].waiters_for_day == 3){
+    if (infoTableData[2].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[2].style = "green"
-    } else if (infoTableData[2].waiters_for_day > 3){
+    } else if (infoTableData[2].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[2].style = "red"
     }
-    if (infoTableData[3].waiters_for_day == 3){
+    if (infoTableData[3].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[3].style = "green"
-    } else if (infoTableData[3].waiters_for_day > 3){
+    } else if (infoTableData[3].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[3].style = "red"
     }
-    if (infoTableData[4].waiters_for_day == 3){
+    if (infoTableData[4].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[4].style = "green"
-    } else if (infoTableData[4].waiters_for_day > 3){
+    } else if (infoTableData[4].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[4].style = "red"
     }
-    if (infoTableData[5].waiters_for_day == 3){
+    if (infoTableData[5].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[5].style = "green"
-    } else if (infoTableData[5].waiters_for_day > 3){
+    } else if (infoTableData[5].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[5].style = "red"
     }
-    if (infoTableData[6].waiters_for_day == 3){
+    if (infoTableData[6].waiters_for_day == 3) {
         waiterAvailabilityByColorDivPrinter[6].style = "green"
-    } else if (infoTableData[6].waiters_for_day > 3){
+    } else if (infoTableData[6].waiters_for_day > 3) {
         waiterAvailabilityByColorDivPrinter[6].style = "red"
     }
 
-    return shiftsAndDayMatcher
-}
+    console.log(waiterAvailabilityByColorDivPrinter)
+
+    return waiterAvailabilityByColorDivPrinter
+    }
 
 // for(var i=0;i<=vm.array1.length;i++)
 // {
@@ -202,9 +204,9 @@ idForEntriesToDelete.push(id);
         errorTestAssistant,
         infoTestAssistant,
         shiftsAndDayMatcher,
-        resetShiftsForUser
+        removeShiftsForUser
     }
-}
+    }
 //await pool.query('UPDATE waiters SET weekdays_working = $1 WHERE waiters_id = $2;', weekdayWorking)
 
 //USE THIS TO COLOR THE DAYS
