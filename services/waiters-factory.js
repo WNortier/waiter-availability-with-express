@@ -46,6 +46,7 @@ module.exports = function WaiterFactory(pool) {
 
         let shiftsInfoExtraction = await pool.query(`select * from waiters`)
         let shiftsInfo = shiftsInfoExtraction.rows
+        console.log(shiftsInfo)
         //Sorting array alphabetically by username (unneccessary but neat > for a-z < for z-a)
         let sortedShiftsInfo = shiftsInfo.sort(function (a, b) {
             return a.waiter_username.toLowerCase() > b.waiter_username.toLowerCase();
@@ -55,6 +56,7 @@ module.exports = function WaiterFactory(pool) {
         let daysThatHaveWaiters = sortedShiftsInfo.map((entry) => {
             return entry.weekdays_working
         })
+        console.log(daysThatHaveWaiters)
         //Looping over the daysThatHaveWaiters array and updating the dayCountObject
         for (var i of daysThatHaveWaiters) {
             switch (i) {
@@ -80,41 +82,113 @@ module.exports = function WaiterFactory(pool) {
                     dayCountObject[0].Sunday++
             }
         }
+        //console.log(dayCountObject)
+            let duplicateCheckMonday = [];
+            duplicateCheckMonday[0] = "Monday";
+            let rowCheckMondayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckMonday)
+            var rowCheckMonday = rowCheckMondayExtraction.rowCount
 
-        let Monday = []
-        Monday[0] = "Monday"
-        Monday[1] = dayCountObject[0].Monday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Monday);
-        let Tuesday = []
-        Tuesday[0] = "Tuesday"
-        Tuesday[1] = dayCountObject[0].Tuesday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Tuesday);
-        let Wednesday = []
-        Wednesday[0] = "Wednesday"
-        Wednesday[1] = dayCountObject[0].Wednesday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Wednesday);
-        let Thursday = []
-        Thursday[0] = "Thursday"
-        Thursday[1] = dayCountObject[0].Thursday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Thursday);
-        let Friday = []
-        Friday[0] = "Friday"
-        Friday[1] = dayCountObject[0].Friday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Friday);
-        let Saturday = []
-        Saturday[0] = "Saturday"
-        Saturday[1] = dayCountObject[0].Saturday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Saturday);
-        let Sunday = []
-        Sunday[0] = "Sunday"
-        Sunday[1] = dayCountObject[0].Sunday
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, Sunday);
+            let duplicateCheckTuesday = [];
+            duplicateCheckTuesday[0] = "Tuesday";
+            let rowCheckTuesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckTuesday)
+            var rowCheckTuesday = rowCheckTuesdayExtraction.rowCount
+
+            let duplicateCheckWednesday = [];
+            duplicateCheckWednesday[0] = "Wednesday";
+            let rowCheckWednesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckWednesday)
+            var rowCheckWednesday = rowCheckWednesdayExtraction.rowCount
+
+            let duplicateCheckThursday = [];
+            duplicateCheckThursday[0] = "Thursday";
+            let rowCheckThursdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckThursday)
+            var rowCheckThursday = rowCheckThursdayExtraction.rowCount
+
+            let duplicateCheckFriday = [];
+            duplicateCheckFriday[0] = "Friday";
+            let rowCheckFridayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckFriday)
+            var rowCheckFriday = rowCheckFridayExtraction.rowCount
+
+            let duplicateCheckSaturday = [];
+            duplicateCheckSaturday[0] = "Saturday";
+            let rowCheckSaturdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSaturday)
+            var rowCheckSaturday = rowCheckSaturdayExtraction.rowCount
+
+            let duplicateCheckSunday = [];
+            duplicateCheckSunday[0] = "Sunday";
+            let rowCheckSundayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSunday)
+            var rowCheckSunday = rowCheckSundayExtraction.rowCount
+
+
+
+        let mondayCount = []
+        mondayCount[0] = "Monday"
+        mondayCount[1] = dayCountObject[0].Monday
+        if (rowCheckMonday == 0) {
+            await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, mondayCount);
+        } else {
+            await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, mondayCount);
+        }
+
+        let tuesdayCount = []
+        tuesdayCount[0] = "Tuesday"
+        tuesdayCount[1] = dayCountObject[0].Tuesday
+        if (rowCheckTuesday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, tuesdayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, tuesdayCount);
+        }
+        
+        let wednesdayCount = []
+        wednesdayCount[0] = "Wednesday"
+        wednesdayCount[1] = dayCountObject[0].Wednesday
+        if (rowCheckWednesday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, wednesdayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, wednesdayCount);    
+        }
+
+        let thursdayCount = []
+        thursdayCount[0] = "Thursday"
+        thursdayCount[1] = dayCountObject[0].Thursday
+        if (rowCheckThursday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, thursdayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, thursdayCount);    
+        }
+        
+        let fridayCount = []
+        fridayCount[0] = "Friday"
+        fridayCount[1] = dayCountObject[0].Friday
+        if (rowCheckFriday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, fridayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, fridayCount);
+        }
+
+        let saturdayCount = []
+        saturdayCount[0] = "Saturday"
+        saturdayCount[1] = dayCountObject[0].Saturday
+        if (rowCheckSaturday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, saturdayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, saturdayCount);
+        }
+
+        let sundayCount = []
+        sundayCount[0] = "Sunday"
+        sundayCount[1] = dayCountObject[0].Sunday
+        if (rowCheckSunday == 0) {
+        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, sundayCount);
+        } else {
+        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, sundayCount);
+        }
         return true
     }
 
 
     async function shiftsAndDayMatcher(){
-    var waiterAvailabilityByColorDivPrinter = [
+    
+        var waiterAvailabilityByColorDivPrinter = [
         { day: 'Mon', style: "rgb(23, 64, 77)" },                                                                                //, style: ''
         { day: 'Tue', style: "rgb(23, 64, 77)" },
         { day: 'Wed', style: "rgb(23, 64, 77)" },
@@ -207,7 +281,7 @@ module.exports = function WaiterFactory(pool) {
         removeShiftsForUser
     }
     }
-//await pool.query('UPDATE waiters SET weekdays_working = $1 WHERE waiters_id = $2;', weekdayWorking)
+
 
 //USE THIS TO COLOR THE DAYS
 /* <div class="col-12 center" id="#">
@@ -216,3 +290,7 @@ module.exports = function WaiterFactory(pool) {
 
             {{/each}}
         </div> */
+    
+    
+    
+        //await pool.query('UPDATE waiters SET weekdays_working = $1 WHERE waiters_id = $2;', weekdayWorking)

@@ -29,7 +29,7 @@ const pool = new Pool({
 const loginsFactory = LoginsFactory(pool)
 const waitersFactory = WaitersFactory(pool)
 const loginsRoutes = LoginsRoutes(loginsFactory)
-const waitersRoutes = WaitersRoutes(waitersFactory)
+const waitersRoutes = WaitersRoutes(waitersFactory, loginsFactory)
 
 app.use(session({
   secret: "<add a secret string here>",
@@ -56,7 +56,7 @@ app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
 app.post("/reset", loginsRoutes.getReset);
 //Waiters Routes
-app.post("/getWorkdays", waitersRoutes.getWorkdays)
+app.post("/getWorkdays/:id", waitersRoutes.getWorkdays)
 
 let portNumber = process.env.PORT || 4007;
 

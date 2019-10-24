@@ -27,12 +27,18 @@ module.exports = function LoginsRoutes(loginsFactory) {
 
     async function getLogin(req, res, next) {
         try {
-            let inputOne = req.body.anInput
-            if (inputOne == ""){
-                res.render("staff/waiters")
-            } else if (inputOne = "a"){
-                res.render("staff/manager")
-            }
+            let emailInput = req.body.anInput
+      res.render("staff/waiters", {
+        accountInfo: await loginsFactory.login(emailInput)
+      });
+            
+            //EASYENTRY
+
+            // if (emailInput == ""){
+            //     res.render("staff/waiters")
+            // } else if (emailInput = "a"){
+            //     res.render("staff/manager")
+            // }
             
             //let theHash = await loginsFactory.passwordHasher(inputOne)
            // console.log({theHash})

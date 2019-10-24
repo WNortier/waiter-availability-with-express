@@ -7,10 +7,11 @@
     <div class="col-10 waiterBlock">
         <div class="row">
             <div class="col-12">
-                <h2>Waiter</h2>
+                <h2>Waiter</h2><br>
                 <div class="row">
                     <div class="col-12 center">
-                        <form action="/getWorkdays" id="getWorkdays" method="POST">
+                        {{#accountInfo}}
+                        <form action="/getWorkdays/{{id}}{{email}}" id="getWorkdays" method="POST">
                             <span>
                                 <input type="radio" name="workday" class="#" value="Monday">
                                 <label>Monday</label>
@@ -40,6 +41,7 @@
                                 <label>Sunday</label>
                             </span>
                         </form>
+                        {{/accountInfo}}
                     </div>
                 </div>
                 <div class="row">
