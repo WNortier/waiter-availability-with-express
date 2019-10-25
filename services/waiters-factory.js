@@ -89,116 +89,75 @@ module.exports = function WaiterFactory(pool) {
             for (var j = 0; j < 7; j++) {
                 duplicateCheckObject[0].rowCheckDay[j] = duplicateCheckObject[0].rowCheckDayExtractors[j].rowCount
             }
-            console.log(duplicateCheckObject[0].duplicateCheckDays[3])
-            console.log(duplicateCheckObject[0].rowCheckDay[0])
-            console.log(duplicateCheckObject[0].rowCheckDay[1])
-            //console.log(Array(duplicateCheckMonday))
 
 
-  
+        let mondayCount = ["Monday",  dayCountObject[0].Monday];
+        let tuesdayCount = ["Tuesday", dayCountObject[0].Tuesday];
+        let wednesdayCount = ["Wednesday", dayCountObject[0].Wednesday];
+        let thursdayCount = ["Thursday", dayCountObject[0].Thursday];
+        let fridayCount = ["Friday", dayCountObject[0].Friday];
+        let saturdayCount = ["Saturday", dayCountObject[0].Saturday]
+        let sundayCount = ["Sunday", dayCountObject[0].Sunday]
 
+        let dayCountArray = [mondayCount, tuesdayCount, wednesdayCount, thursdayCount, fridayCount, saturdayCount, sundayCount]
+        let duplicatePreventionByRowCheck = duplicateCheckObject[0].rowCheckDay
+        console.log(duplicatePreventionByRowCheck);
 
-            // let rowCheckMondayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckMonday)
-            // var rowCheckMonday = rowCheckMondayExtraction.rowCount
-
-
-            // let rowCheckTuesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckTuesday)
-            // var rowCheckTuesday = rowCheckTuesdayExtraction.rowCount
-
-
-            // let rowCheckWednesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckWednesday)
-            // var rowCheckWednesday = rowCheckWednesdayExtraction.rowCount
-
-
-            // let rowCheckThursdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckThursday)
-            // var rowCheckThursday = rowCheckThursdayExtraction.rowCount
-
-
-            // let rowCheckFridayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckFriday)
-            // var rowCheckFriday = rowCheckFridayExtraction.rowCount
-
-
-            // let rowCheckSaturdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSaturday)
-            // var rowCheckSaturday = rowCheckSaturdayExtraction.rowCount
-
-
-            // let rowCheckSundayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSunday)
-            // var rowCheckSunday = rowCheckSundayExtraction.rowCount
-
-
-
-
-        let mondayCount = ["Monday",  dayCountObject[0].Monday]
-        mondayCount[0] = 
-        mondayCount[1] = dayCountObject[0].Monday
-        //if (rowCheckMonday == 0) {
-            if (duplicateCheckObject[0].rowCheckDay[0] == 0) {
-            await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, mondayCount);
-        } else {
-            await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, mondayCount);
+        for (var k = 0; k < 7; k++) {
+            if (duplicatePreventionByRowCheck[k] == 0) {
+                await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, dayCountArray[k]);
+            } else {
+                await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, dayCountArray[k]);
+            }
         }
 
-        let tuesdayCount = []
-        tuesdayCount[0] = "Tuesday"
-        tuesdayCount[1] = dayCountObject[0].Tuesday
-        //if (rowCheckTuesday == 0) {
-            if (duplicateCheckObject[0].rowCheckDay[1] == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, tuesdayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, tuesdayCount);
-        }
-        
-        let wednesdayCount = []
-        wednesdayCount[0] = "Wednesday"
-        wednesdayCount[1] = dayCountObject[0].Wednesday
-        //if (rowCheckWednesday == 0) {
-            if (duplicateCheckObject[0].rowCheckDay[2] == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, wednesdayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, wednesdayCount);    
-        }
-
-        let thursdayCount = []
-        thursdayCount[0] = "Thursday"
-        thursdayCount[1] = dayCountObject[0].Thursday
-        //if (rowCheckThursday == 0) {
-            if (duplicateCheckObject[0].rowCheckDay[3] == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, thursdayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, thursdayCount);    
-        }
-        
-        let fridayCount = []
-        fridayCount[0] = "Friday"
-        fridayCount[1] = dayCountObject[0].Friday
-        if (duplicateCheckObject[0].rowCheckDay[4] == 0) {
-            //if (rowCheckFriday == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, fridayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, fridayCount);
-        }
-
-        let saturdayCount = []
-        saturdayCount[0] = "Saturday"
-        saturdayCount[1] = dayCountObject[0].Saturday
-        if (duplicateCheckObject[0].rowCheckDay[5] == 0) {
-            //if (rowCheckSaturday == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, saturdayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, saturdayCount);
-        }
-
-        let sundayCount = []
-        sundayCount[0] = "Sunday"
-        sundayCount[1] = dayCountObject[0].Sunday
-        if (duplicateCheckObject[0].rowCheckDay[6] == 0) {
-            //if (rowCheckSunday == 0) {
-        await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, sundayCount);
-        } else {
-        await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, sundayCount);
-        }
         return true
     }
+
+
+            // if (duplicateCheckObject[0].rowCheckDay[0] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, mondayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, mondayCount);
+            // }
+
+
+            // if (duplicateCheckObject[0].rowCheckDay[1] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, tuesdayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, tuesdayCount);
+            // }
+
+            // if (duplicateCheckObject[0].rowCheckDay[2] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, wednesdayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, wednesdayCount);
+            // }
+
+            // if (duplicateCheckObject[0].rowCheckDay[3] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, thursdayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, thursdayCount);
+            // }
+
+            // if (duplicateCheckObject[0].rowCheckDay[4] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, fridayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, fridayCount);
+            // }
+
+            // if (duplicateCheckObject[0].rowCheckDay[5] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, saturdayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, saturdayCount);
+            // }
+
+            // if (duplicateCheckObject[0].rowCheckDay[6] == 0) {
+            //     await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, sundayCount);
+            // } else {
+            //     await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, sundayCount);
+            // }
+
 
 
     async function shiftsAndDayMatcher(){
