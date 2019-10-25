@@ -1,21 +1,17 @@
 module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
 
-
-
     async function getWorkdays(req, res, next) {
         try {
-            let aWorkDaySubmission = req.body.workday
-            let waitersInfo = req.params.id
-            let idPart = waitersInfo.substring(0, 3);
-            let emailPart = waitersInfo.slice(3);
-            // console.log(aWorkDaySubmission)
-            // console.log(idPart)
+            let aWorkDaySubmission = req.body.workday 
+            let idPart = req.params.id
+            console.log(idPart)
+            let emailPart = req.params.email
+            console.log(emailPart)
             await waitersFactory.shiftsPopulator(aWorkDaySubmission, idPart);
             await waitersFactory.dayCounter();
-            
             res.render("staff/waiters", {
                 accountInfo: await loginsFactory.login(emailPart)
-              });
+            });
         } catch (err) {
             next(err);
         }
@@ -30,7 +26,7 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
             await waitersFactory.dayCounter()
             res.render("staff/waiters", {
                 accountInfo: await loginsFactory.login(emailPart)
-              });
+            });
         } catch (err) {
             next(err);
         }
@@ -39,6 +35,5 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
     return {
         getWorkdays,
         getWaiterReset
-        // aPostRoute
     }
 }

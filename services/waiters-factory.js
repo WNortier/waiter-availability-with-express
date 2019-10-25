@@ -1,15 +1,12 @@
 module.exports = function WaiterFactory(pool) {
 
         async function shiftsPopulator(workday, id) {
-            let waiterDataId = [];
-            waiterDataId[0] = id;
+            let waiterDataId = [id];
             let accountExtraction = await pool.query(`SELECT * FROM accounts WHERE id = $1`, waiterDataId)
             let account = accountExtraction.rows;
             let waiterUsername = account[0].username;
             //Duplicate day prevention
-            let workdayAndId = [];
-            workdayAndId[0] = workday;
-            workdayAndId[1] = id;
+            let workdayAndId = [workday, id];
             let rowCheckExtraction = await pool.query(`SELECT * FROM waiters WHERE (weekdays_working = $1 AND waiters_id = $2)`, workdayAndId)
             var rowCheck = rowCheckExtraction.rowCount
             if (rowCheck == 1) {
@@ -18,10 +15,7 @@ module.exports = function WaiterFactory(pool) {
             }
             //If there is no existing row for that day, enter it 
             else if (rowCheck == 0) {
-                let newWorkDayRowInfo = [];
-                newWorkDayRowInfo[0] = waiterUsername;
-                newWorkDayRowInfo[1] = workday;
-                newWorkDayRowInfo[2] = id;
+                let newWorkDayRowInfo = [waiterUsername, workday, id];
                 await pool.query(`INSERT INTO waiters (waiter_username, weekdays_working, waiters_id) VALUES ($1, $2, $3)`, newWorkDayRowInfo);
                 return true
             }
@@ -46,7 +40,7 @@ module.exports = function WaiterFactory(pool) {
 
         let shiftsInfoExtraction = await pool.query(`select * from waiters`)
         let shiftsInfo = shiftsInfoExtraction.rows
-        console.log(shiftsInfo)
+        //console.log(shiftsInfo)
         //Sorting array alphabetically by username (unneccessary but neat > for a-z < for z-a)
         let sortedShiftsInfo = shiftsInfo.sort(function (a, b) {
             return a.waiter_username.toLowerCase() > b.waiter_username.toLowerCase();
@@ -56,7 +50,7 @@ module.exports = function WaiterFactory(pool) {
         let daysThatHaveWaiters = sortedShiftsInfo.map((entry) => {
             return entry.weekdays_working
         })
-        console.log(daysThatHaveWaiters)
+        //console.log(daysThatHaveWaiters)
         //Looping over the daysThatHaveWaiters array and updating the dayCountObject
         for (var i of daysThatHaveWaiters) {
             switch (i) {
@@ -82,48 +76,63 @@ module.exports = function WaiterFactory(pool) {
                     dayCountObject[0].Sunday++
             }
         }
-        //console.log(dayCountObject)
-            let duplicateCheckMonday = [];
-            duplicateCheckMonday[0] = "Monday";
-            let rowCheckMondayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckMonday)
-            var rowCheckMonday = rowCheckMondayExtraction.rowCount
 
-            let duplicateCheckTuesday = [];
-            duplicateCheckTuesday[0] = "Tuesday";
-            let rowCheckTuesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckTuesday)
-            var rowCheckTuesday = rowCheckTuesdayExtraction.rowCount
+            let duplicateCheckObject = [{
+                duplicateCheckDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                rowCheckDayExtractors: [rowCheckMondayExtraction = "", rowCheckTuesdayExtraction = "", rowCheckWednesdayExtraction = "", rowCheckThursdayExtraction = "", rowCheckFridayExtraction = "", rowCheckSaturdayExtraction = "", rowCheckSundayExtraction = ""],
+                rowCheckDay: [rowCheckMonday = "", rowCheckTuesday = "", rowCheckWednesday = "", rowCheckThursday = "", rowCheckFriday = "", rowCheckSaturday = "", rowCheckSunday = ""]
+            }]
 
-            let duplicateCheckWednesday = [];
-            duplicateCheckWednesday[0] = "Wednesday";
-            let rowCheckWednesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckWednesday)
-            var rowCheckWednesday = rowCheckWednesdayExtraction.rowCount
-
-            let duplicateCheckThursday = [];
-            duplicateCheckThursday[0] = "Thursday";
-            let rowCheckThursdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckThursday)
-            var rowCheckThursday = rowCheckThursdayExtraction.rowCount
-
-            let duplicateCheckFriday = [];
-            duplicateCheckFriday[0] = "Friday";
-            let rowCheckFridayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckFriday)
-            var rowCheckFriday = rowCheckFridayExtraction.rowCount
-
-            let duplicateCheckSaturday = [];
-            duplicateCheckSaturday[0] = "Saturday";
-            let rowCheckSaturdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSaturday)
-            var rowCheckSaturday = rowCheckSaturdayExtraction.rowCount
-
-            let duplicateCheckSunday = [];
-            duplicateCheckSunday[0] = "Sunday";
-            let rowCheckSundayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSunday)
-            var rowCheckSunday = rowCheckSundayExtraction.rowCount
+            for (var j = 0; j < 7; j++) {
+                duplicateCheckObject[0].rowCheckDayExtractors[j] = await pool.query(`SELECT * FROM info WHERE weekday = $1`, Array(duplicateCheckObject[0].duplicateCheckDays[j]))
+            }
+            for (var j = 0; j < 7; j++) {
+                duplicateCheckObject[0].rowCheckDay[j] = duplicateCheckObject[0].rowCheckDayExtractors[j].rowCount
+            }
+            console.log(duplicateCheckObject[0].duplicateCheckDays[3])
+            console.log(duplicateCheckObject[0].rowCheckDay[0])
+            console.log(duplicateCheckObject[0].rowCheckDay[1])
+            //console.log(Array(duplicateCheckMonday))
 
 
+  
 
-        let mondayCount = []
-        mondayCount[0] = "Monday"
+
+            // let rowCheckMondayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckMonday)
+            // var rowCheckMonday = rowCheckMondayExtraction.rowCount
+
+
+            // let rowCheckTuesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckTuesday)
+            // var rowCheckTuesday = rowCheckTuesdayExtraction.rowCount
+
+
+            // let rowCheckWednesdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckWednesday)
+            // var rowCheckWednesday = rowCheckWednesdayExtraction.rowCount
+
+
+            // let rowCheckThursdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckThursday)
+            // var rowCheckThursday = rowCheckThursdayExtraction.rowCount
+
+
+            // let rowCheckFridayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckFriday)
+            // var rowCheckFriday = rowCheckFridayExtraction.rowCount
+
+
+            // let rowCheckSaturdayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSaturday)
+            // var rowCheckSaturday = rowCheckSaturdayExtraction.rowCount
+
+
+            // let rowCheckSundayExtraction = await pool.query(`SELECT * FROM info WHERE weekday = $1`, duplicateCheckSunday)
+            // var rowCheckSunday = rowCheckSundayExtraction.rowCount
+
+
+
+
+        let mondayCount = ["Monday",  dayCountObject[0].Monday]
+        mondayCount[0] = 
         mondayCount[1] = dayCountObject[0].Monday
-        if (rowCheckMonday == 0) {
+        //if (rowCheckMonday == 0) {
+            if (duplicateCheckObject[0].rowCheckDay[0] == 0) {
             await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, mondayCount);
         } else {
             await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, mondayCount);
@@ -132,7 +141,8 @@ module.exports = function WaiterFactory(pool) {
         let tuesdayCount = []
         tuesdayCount[0] = "Tuesday"
         tuesdayCount[1] = dayCountObject[0].Tuesday
-        if (rowCheckTuesday == 0) {
+        //if (rowCheckTuesday == 0) {
+            if (duplicateCheckObject[0].rowCheckDay[1] == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, tuesdayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, tuesdayCount);
@@ -141,7 +151,8 @@ module.exports = function WaiterFactory(pool) {
         let wednesdayCount = []
         wednesdayCount[0] = "Wednesday"
         wednesdayCount[1] = dayCountObject[0].Wednesday
-        if (rowCheckWednesday == 0) {
+        //if (rowCheckWednesday == 0) {
+            if (duplicateCheckObject[0].rowCheckDay[2] == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, wednesdayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, wednesdayCount);    
@@ -150,7 +161,8 @@ module.exports = function WaiterFactory(pool) {
         let thursdayCount = []
         thursdayCount[0] = "Thursday"
         thursdayCount[1] = dayCountObject[0].Thursday
-        if (rowCheckThursday == 0) {
+        //if (rowCheckThursday == 0) {
+            if (duplicateCheckObject[0].rowCheckDay[3] == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, thursdayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, thursdayCount);    
@@ -159,7 +171,8 @@ module.exports = function WaiterFactory(pool) {
         let fridayCount = []
         fridayCount[0] = "Friday"
         fridayCount[1] = dayCountObject[0].Friday
-        if (rowCheckFriday == 0) {
+        if (duplicateCheckObject[0].rowCheckDay[4] == 0) {
+            //if (rowCheckFriday == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, fridayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, fridayCount);
@@ -168,7 +181,8 @@ module.exports = function WaiterFactory(pool) {
         let saturdayCount = []
         saturdayCount[0] = "Saturday"
         saturdayCount[1] = dayCountObject[0].Saturday
-        if (rowCheckSaturday == 0) {
+        if (duplicateCheckObject[0].rowCheckDay[5] == 0) {
+            //if (rowCheckSaturday == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, saturdayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, saturdayCount);
@@ -177,7 +191,8 @@ module.exports = function WaiterFactory(pool) {
         let sundayCount = []
         sundayCount[0] = "Sunday"
         sundayCount[1] = dayCountObject[0].Sunday
-        if (rowCheckSunday == 0) {
+        if (duplicateCheckObject[0].rowCheckDay[6] == 0) {
+            //if (rowCheckSunday == 0) {
         await pool.query(`INSERT INTO info (weekday, waiters_for_day) VALUES ($1, $2)`, sundayCount);
         } else {
         await pool.query(`UPDATE info SET waiters_for_day = $2 WHERE weekday = $1`, sundayCount);
@@ -198,21 +213,12 @@ module.exports = function WaiterFactory(pool) {
         { day: 'Sun', style: "rgb(23, 64, 77)" },
     ];
 
-    // var infoTableDataReference = [ { id: 57, weekday: 'Monday', waiters_for_day: 2 },
-    //     { id: 58, weekday: 'Tuesday', waiters_for_day: 1 },
-    //     { id: 59, weekday: 'Wednesday', waiters_for_day: 0 },
-    //     { id: 60, weekday: 'Thursday', waiters_for_day: 0 },
-    //     { id: 61, weekday: 'Friday', waiters_for_day: 0 },
-    //     { id: 62, weekday: 'Saturday', waiters_for_day: 0 },
-    //     { id: 63, weekday: 'Sunday', waiters_for_day: 0 }]
-
     let infoTableDataExtraction = await pool.query(`SELECT weekday, waiters_for_day FROM info`)
     let infoTableData = infoTableDataExtraction.rows
     let infoTableDataRowCount = infoTableDataExtraction.rowCount
 
     //console.log(infoTableData)
 if (infoTableDataRowCount > 0){
-
     for (var i = 0; i < 7; i++) {
         if (infoTableData[i].waiters_for_day == 3) {
             waiterAvailabilityByColorDivPrinter[i].style = "green"
@@ -220,37 +226,6 @@ if (infoTableDataRowCount > 0){
             waiterAvailabilityByColorDivPrinter[i].style = "red"
         }
     }
-    
-    // if (infoTableData[1].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[1].style = "green"
-    // } else if (infoTableData[1].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[1].style = "red"
-    // }
-    // if (infoTableData[2].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[2].style = "green"
-    // } else if (infoTableData[2].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[2].style = "red"
-    // }
-    // if (infoTableData[3].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[3].style = "green"
-    // } else if (infoTableData[3].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[3].style = "red"
-    // }
-    // if (infoTableData[4].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[4].style = "green"
-    // } else if (infoTableData[4].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[4].style = "red"
-    // }
-    // if (infoTableData[5].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[5].style = "green"
-    // } else if (infoTableData[5].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[5].style = "red"
-    // }
-    // if (infoTableData[6].waiters_for_day == 3) {
-    //     waiterAvailabilityByColorDivPrinter[6].style = "green"
-    // } else if (infoTableData[6].waiters_for_day > 3) {
-    //     waiterAvailabilityByColorDivPrinter[6].style = "red"
-    //}
 }
 
     //console.log(waiterAvailabilityByColorDivPrinter)
@@ -289,3 +264,6 @@ if (infoTableDataRowCount > 0){
     
     
         //await pool.query('UPDATE waiters SET weekdays_working = $1 WHERE waiters_id = $2;', weekdayWorking)
+
+        //select weekdays_working, count (*) from waiters group by weekdays_working;
+            //select weekdays_working, count (*) from waiters group by weekdays_working;

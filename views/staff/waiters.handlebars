@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-12 center">
                         {{#accountInfo}}
-                        <form action="/getWorkdays/{{id}}{{email}}" id="getWorkdays" method="POST">
+                        <form action="/getWorkdays/{{id}}/{{email}}" id="getWorkdays" method="POST">
                             <span>
                                 <input type="radio" name="workday" class="#" value="Monday">
                                 <label>Monday</label>
@@ -49,7 +49,7 @@
                         {{#accountInfo}}
                         <form method="POST">
                             <button type="submit" form="getWorkdays">Submit</button>
-                            <button type="submit" formaction="/getWorkdays/reset/{{id}}{{email}}">Reset</button>
+                            <button type="submit" formaction="/getWorkdays/reset/{{id}}">Reset</button>
                         </form>
                         {{/accountInfo}}
                     </div>
