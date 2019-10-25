@@ -210,60 +210,53 @@ module.exports = function WaiterFactory(pool) {
     let infoTableData = infoTableDataExtraction.rows
     let infoTableDataRowCount = infoTableDataExtraction.rowCount
 
-    console.log(infoTableData)
+    //console.log(infoTableData)
 if (infoTableDataRowCount > 0){
-    if (infoTableData[0].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[0].style = "green"
-    } else if (infoTableData[0].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[0].style = "red"
+
+    for (var i = 0; i < 7; i++) {
+        if (infoTableData[i].waiters_for_day == 3) {
+            waiterAvailabilityByColorDivPrinter[i].style = "green"
+        } else if (infoTableData[i].waiters_for_day > 3) {
+            waiterAvailabilityByColorDivPrinter[i].style = "red"
+        }
     }
-    if (infoTableData[1].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[1].style = "green"
-    } else if (infoTableData[1].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[1].style = "red"
-    }
-    if (infoTableData[2].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[2].style = "green"
-    } else if (infoTableData[2].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[2].style = "red"
-    }
-    if (infoTableData[3].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[3].style = "green"
-    } else if (infoTableData[3].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[3].style = "red"
-    }
-    if (infoTableData[4].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[4].style = "green"
-    } else if (infoTableData[4].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[4].style = "red"
-    }
-    if (infoTableData[5].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[5].style = "green"
-    } else if (infoTableData[5].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[5].style = "red"
-    }
-    if (infoTableData[6].waiters_for_day == 3) {
-        waiterAvailabilityByColorDivPrinter[6].style = "green"
-    } else if (infoTableData[6].waiters_for_day > 3) {
-        waiterAvailabilityByColorDivPrinter[6].style = "red"
-    }
+    
+    // if (infoTableData[1].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[1].style = "green"
+    // } else if (infoTableData[1].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[1].style = "red"
+    // }
+    // if (infoTableData[2].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[2].style = "green"
+    // } else if (infoTableData[2].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[2].style = "red"
+    // }
+    // if (infoTableData[3].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[3].style = "green"
+    // } else if (infoTableData[3].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[3].style = "red"
+    // }
+    // if (infoTableData[4].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[4].style = "green"
+    // } else if (infoTableData[4].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[4].style = "red"
+    // }
+    // if (infoTableData[5].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[5].style = "green"
+    // } else if (infoTableData[5].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[5].style = "red"
+    // }
+    // if (infoTableData[6].waiters_for_day == 3) {
+    //     waiterAvailabilityByColorDivPrinter[6].style = "green"
+    // } else if (infoTableData[6].waiters_for_day > 3) {
+    //     waiterAvailabilityByColorDivPrinter[6].style = "red"
+    //}
 }
 
-    console.log(waiterAvailabilityByColorDivPrinter)
+    //console.log(waiterAvailabilityByColorDivPrinter)
 
     return waiterAvailabilityByColorDivPrinter
     }
-
-// for(var i=0;i<=vm.array1.length;i++)
-// {
-//     for(var j=0;j<=vm.array2.length;j++)
-//     {
-//         if(i==j)
-//         vm.save(vm.array1[i].content1,vm.array2[j].content2){
-
-//         }
-//     }
-// }
 
     async function errorTestAssistant() {
         return errorMessage
