@@ -356,6 +356,13 @@ button {
   padding: 1em;
 }
 
+.waiterBlockOrange {
+  background-color: rgb(49, 52, 54);
+  border-radius: 30px;
+  border: rgb(224, 92, 0) 3px solid;
+  padding: 1em;
+}
+
 .mainSpacer {
   height: 4em;
 }
@@ -383,8 +390,8 @@ form.submitted .ng-invalid {
   border-radius: 2px;
   border-width: 2px;
   margin-right: 20px;
-  width: 130px;
-  height: 110px;
+  width: 105px;
+  height: 100px;
   background-color: rgb(23, 64, 77);
   display: inline-block;
 }

@@ -30,11 +30,13 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
 
             if (emailInput == "z" || emailInput == "x" || emailInput == "c" || emailInput == "d") {
                 res.render("staff/waiters", {
-                    accountInfo: await loginsFactory.login(emailInput)
+                    accountInfo: await loginsFactory.login(emailInput),
+                    // workDays: await waitersFactory.workingDaysDisplayer("recall")
                 });
             } else {
                 res.render("staff/manager", {
-                    shiftDays: await waitersFactory.shiftsAndDayMatcher()
+                    shiftDays: await waitersFactory.shiftsAndDayMatcher(),
+                    workDaysInfo: await loginsFactory.waiterInfoForManager()
                 });
             }
         } catch (err) {

@@ -63,8 +63,6 @@ app.post("/reset", loginsRoutes.getReset);
 app.post("/getWorkdays/:id/:email", waitersRoutes.getWorkdays)
 app.post("/getWorkdays/reset/:id/:email", waitersRoutes.getWaiterReset)
 
-app.use(errorHandler);
-
 let portNumber = process.env.PORT || 4007;
 
 app.listen(portNumber, function () {

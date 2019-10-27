@@ -65,15 +65,20 @@ module.exports = function LoginsFactory(pool) {
         let waiterDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
         let waiterData = waiterDataExtraction.rows
         //Calculate date of Monday and date of Sunday for current week
-        var currentWeeksMondayFetcher = new Date();
-        var currentWeekDay = currentWeeksMondayFetcher.getDay();
+        var currentDay = new Date();
+        console.log(currentDay)
+        var currentWeekDay = currentDay.getDay();
+        currentWeekDay
         var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
-        var wkStart = new Date(new Date(currentWeeksMondayFetcher).setDate(currentWeeksMondayFetcher.getDate() - lessDays));
-        var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
+        console.log(lessDays)
+        var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays -7))); //edited - multipled by two
+        var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6)); //edited added 7
         var wkStartSubString = String(wkStart).substring(0, 10);
-        var wekEndSubString = String(wkEnd).substring(0, 10);
+        console.log(wkStartSubString)
+        var wkEndSubString = String(wkEnd).substring(0, 10);
+        console.log(wkEndSubString)
         waiterData[0].weekStart = wkStartSubString
-        waiterData[0].weekEnd = wekEndSubString
+        waiterData[0].weekEnd = wkEndSubString
         return waiterData
     }
 
@@ -93,6 +98,22 @@ module.exports = function LoginsFactory(pool) {
         return databaseWaiters.rows;
     }
 
+    async function waiterInfoForManager(){
+        //let databaseWaiters = await pool.query(`SELECT DISTINCT waiter_username from waiters`);
+        let databaseWaiters = await pool.query(`SELECT DISTINCT ON (waiter_username) waiters, weekdays_working from waiters order by waiter_username, weekdays_working`);
+        console.log(databaseWaiters.rows)
+        return databaseWaiters.rows;
+    }
+
+// SELECT
+//    DISTINCT ON (column_1) column_alias,
+//    column_2
+// FROM
+//    table_name
+// ORDER BY
+//    column_1,
+//    column_2;
+
     return {
         // passwordHasher,
         // passwordComparer,
@@ -100,6 +121,7 @@ module.exports = function LoginsFactory(pool) {
         login,
         reset,
         accountsTestAssistant,
-        waitersTestAssistant
+        waitersTestAssistant,
+        waiterInfoForManager
     }
 }
