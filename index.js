@@ -47,6 +47,10 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+function errorHandler(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
+}
 //Logins Routes
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)
@@ -57,7 +61,9 @@ app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
 app.post("/reset", loginsRoutes.getReset);
 //Waiters Routes
 app.post("/getWorkdays/:id/:email", waitersRoutes.getWorkdays)
-app.post("/getWorkdays/reset/:id", waitersRoutes.getWaiterReset)
+app.post("/getWorkdays/reset/:id/:email", waitersRoutes.getWaiterReset)
+
+app.use(errorHandler);
 
 let portNumber = process.env.PORT || 4007;
 

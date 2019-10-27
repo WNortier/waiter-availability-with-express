@@ -1,59 +1,113 @@
 <div class="row">
-    <div class="col-12 generalSpacer"></div>
+    <div class="col-12 generalSpacerWaiters"></div>
+</div>
+
+<div class="row">
+    <div class="col-12 center">
+        {{#accountInfo}}
+        <div class="col-4"></div>
+        <div class="col-4 waiterBlock">
+            <h3 style="display: inline;">Welcome to your shifts portal </h3>
+            <h3 style="color:rgb(49, 135, 163); display:inline;">{{username}}</h3>
+        </div>
+        <div class="col-4"></div>
+        {{/accountInfo}}
+    </div>
 </div>
 
 <div class="row col-12 center">
     <div class="col-1"></div>
-    <div class="col-10 waiterBlock">
+    <div class="col-5 waiterBlock">
+        {{#accountInfo}}
+        <h4 style="display:inline;">Please select your shifts for the week</h4>
+        <h4 style="color:rgb(49, 135, 163); display:inline;">{{weekStart}} - {{weekEnd}}</h4>
+        {{/accountInfo}}
         <div class="row">
             <div class="col-12">
-                <h2>Waiter</h2><br>
+
                 <div class="row">
                     <div class="col-12 center">
                         {{#accountInfo}}
                         <form action="/getWorkdays/{{id}}/{{email}}" id="getWorkdays" method="POST">
                             <span>
-                                <input type="radio" name="workday" class="#" value="Monday">
-                                <label>Monday</label>
+
+                                <label> <input type="radio" name="workday" class="#" value="Monday">Monday</label>
                             </span>
                             <span>
-                                <input type="radio" name="workday" class="#" value="Tuesday">
-                                <label>Tuesday</label>
+
+                                <label><input type="radio" name="workday" class="#" value="Tuesday">Tuesday</label>
                             </span>
                             <span>
-                                <input type="radio" name="workday" class="#" value="Wednesday">
-                                <label>Wednesday</label>
+
+                                <label><input type="radio" name="workday" class="#" value="Wednesday">Wednesday</label>
+                            </span><br>
+                            <span>
+
+                                <label><input type="radio" name="workday" class="#" value="Thursday">Thursday</label>
                             </span>
                             <span>
-                                <input type="radio" name="workday" class="#" value="Thursday">
-                                <label>Thursday</label>
+
+                                <label><input type="radio" name="workday" class="#" value="Friday">Friday</label>
+                            </span><br>
+                            <span>
+
+                                <label><input type="radio" name="workday" class="#" value="Saturday">Saturday</label>
                             </span>
                             <span>
-                                <input type="radio" name="workday" class="#" value="Friday">
-                                <label>Friday</label>
-                            </span>
-                            <span>
-                                <input type="radio" name="workday" class="#" value="Saturday">
-                                <label>Saturday</label>
-                            </span>
-                            <span>
-                                <input type="radio" name="workday" class="#" value="Sunday">
-                                <label>Sunday</label>
+
+                                <label><input type="radio" name="workday" class="#" value="Sunday">Sunday</label>
                             </span>
                         </form>
                         {{/accountInfo}}
                     </div>
+
                 </div>
                 <div class="row">
                     <div class="col-12">
                         {{#accountInfo}}
                         <form method="POST">
                             <button type="submit" form="getWorkdays">Submit</button>
-                            <button type="submit" formaction="/getWorkdays/reset/{{id}}">Reset</button>
+                            <button type="submit" formaction="/getWorkdays/reset/{{id}}/{{email}}">Reset</button>
                         </form>
                         {{/accountInfo}}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="message col-12">
+                        <h5 style="color: red; font-weight: lighter">{{messages.info}}</h5>
+                    </div>
+                </div>
+
             </div>
-            <div class="col-4"></div>
+
+
+
+
+
         </div>
+    </div>
+
+    <div class="col-3 waiterBlock">
+        <h4>Shifts Selected</h4>
+        <table class="center" style="width:60%">
+            {{!-- <tr>
+                <th></th>
+                <th style="text-decoration:underline;">Shifts Selected</th>
+            </tr> --}}
+            <tr>
+                <td></td>
+            </tr>
+            {{#each workDays}}
+            {{!-- {{#if workDays}} --}}
+            <tr>
+                <td>☕</td>
+                <td>{{weekdays_working}}</td>
+            </tr>
+            {{!-- {{/if}} --}}
+            {{/each}}
+        </table>
+
+    </div>
+
+    <div class="col-3"></div>
+</div>

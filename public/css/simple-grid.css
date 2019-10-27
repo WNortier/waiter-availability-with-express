@@ -259,7 +259,15 @@ table {
 table,
 th,
 td {
-  border: 1px solid black;
+  border: none;
+  /* border: 1px solid black; */
+  font-size: 1.225rem;
+}
+
+table,
+td {
+  color: green;
+ 
 }
 
 a {
@@ -274,6 +282,17 @@ input {
 
 input[type=text]:focus {
   background-color: lightblue;
+}
+
+input[type='radio'], label{   
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0.25em;
+  margin:0.25em;
+  
+  /*vertical-align: baseline;
+   padding: 10px;
+  margin: 10px; */
 }
 
 button {
@@ -376,7 +395,7 @@ form.submitted .ng-invalid {
 }
 
 label {
-  font-size: 1.525rem; 
+  font-size: 1.225rem; 
   font-weight: bold;
 }
 

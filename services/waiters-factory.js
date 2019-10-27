@@ -15,6 +15,7 @@ module.exports = function WaiterFactory(pool) {
         }
         //If there is no existing row for that day, enter it 
         else if (rowCheck == 0) {
+            errorMessage = "";
             let newWorkDayRowInfo = [waiterUsername, workday, id];
             await pool.query(`INSERT INTO waiters (waiter_username, weekdays_working, waiters_id) VALUES ($1, $2, $3)`, newWorkDayRowInfo);
             return true
@@ -25,6 +26,19 @@ module.exports = function WaiterFactory(pool) {
         let idForEntriesToDelete = []
         idForEntriesToDelete.push(id);
         return await pool.query(`DELETE FROM waiters WHERE waiters_id = $1`, idForEntriesToDelete)
+    }
+
+    async function workingDaysDisplayer(id){
+        
+        if (id){
+        let idForWorkingDays = [id];
+        let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
+        let workingDays = workingDaysExtraction.rows
+        return workingDays
+    } else {
+        let workingDaysExtraction = await pool.query(`select * from waiters`)
+        return workingDaysExtraction.rows
+    }
     }
 
     async function dayCounter() {
@@ -171,11 +185,12 @@ module.exports = function WaiterFactory(pool) {
 
     return {
         shiftsPopulator,
+        removeShiftsForUser,
+        workingDaysDisplayer,
         dayCounter,
-        errorTestAssistant,
-        infoTestAssistant,
         shiftsAndDayMatcher,
-        removeShiftsForUser
+        errorTestAssistant,
+        infoTestAssistant,  
     }
 }
 

@@ -63,8 +63,18 @@ module.exports = function LoginsFactory(pool) {
     async function login(email){
         let emailArray = []; emailArray.push(email)
         let waiterDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
-        //console.log(waiterDataExtraction)
-        return waiterDataExtraction.rows
+        let waiterData = waiterDataExtraction.rows
+        //Calculate date of Monday and date of Sunday for current week
+        var currentWeeksMondayFetcher = new Date();
+        var currentWeekDay = currentWeeksMondayFetcher.getDay();
+        var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
+        var wkStart = new Date(new Date(currentWeeksMondayFetcher).setDate(currentWeeksMondayFetcher.getDate() - lessDays));
+        var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
+        var wkStartSubString = String(wkStart).substring(0, 10);
+        var wekEndSubString = String(wkEnd).substring(0, 10);
+        waiterData[0].weekStart = wkStartSubString
+        waiterData[0].weekEnd = wekEndSubString
+        return waiterData
     }
 
     async function reset() {
