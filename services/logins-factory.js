@@ -100,19 +100,10 @@ module.exports = function LoginsFactory(pool) {
 
     async function waiterInfoForManager(){
         //let databaseWaiters = await pool.query(`SELECT DISTINCT waiter_username from waiters`);
-        let databaseWaiters = await pool.query(`SELECT DISTINCT ON (waiter_username) waiters, weekdays_working from waiters order by waiter_username, weekdays_working`);
+        let databaseWaiters = await pool.query(`select waiter_username as waiters, weekdays_working as weekdays from waiters order by waiter_username;`);
         console.log(databaseWaiters.rows)
         return databaseWaiters.rows;
     }
-
-// SELECT
-//    DISTINCT ON (column_1) column_alias,
-//    column_2
-// FROM
-//    table_name
-// ORDER BY
-//    column_1,
-//    column_2;
 
     return {
         // passwordHasher,
