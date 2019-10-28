@@ -252,22 +252,33 @@ p {
   }
 }
 
-table {
+table.waitersTable {
   border-collapse: collapse;
 }
 
-table,
-th,
-td {
-  border: none;
-  /* border: 1px solid black; */
+table.waitersTable td {
+  color: green;
+  text-align: center;
   font-size: 1.225rem;
 }
 
-table,
-td {
-  color: green;
- 
+table.managersTable {
+  border-collapse: collapse;
+}
+
+table.managersTable td {
+  color: rgb(208, 205, 198);
+  text-align: center;
+  font-size: 1.225rem;
+  border: 2px solid rgb(49, 135, 163);
+  padding: 5px;
+}
+
+table.managersTable th {
+  color: rgb(208, 205, 198);
+  font-size: 1.225rem;
+  border: 2px solid rgb(49, 135, 163);
+  padding: 5px;
 }
 
 a {
@@ -392,6 +403,19 @@ form.submitted .ng-invalid {
   margin-right: 20px;
   width: 105px;
   height: 100px;
+  background-color: rgb(23, 64, 77);
+  display: inline-block;
+}
+
+.weekdayBlockDivsKey {
+  font-family: monospace;
+  font-size: 50px;
+  border: rgb(224, 92, 0) 3px solid;
+  border-radius: 2px;
+  border-width: 2px;
+  margin-right: 20px;
+  width: 55px;
+  height: 50px;
   background-color: rgb(23, 64, 77);
   display: inline-block;
 }

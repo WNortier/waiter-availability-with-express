@@ -66,17 +66,13 @@ module.exports = function LoginsFactory(pool) {
         let waiterData = waiterDataExtraction.rows
         //Calculate date of Monday and date of Sunday for current week
         var currentDay = new Date();
-        console.log(currentDay)
         var currentWeekDay = currentDay.getDay();
         currentWeekDay
         var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
-        console.log(lessDays)
         var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays -7))); //edited - multipled by two
         var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6)); //edited added 7
         var wkStartSubString = String(wkStart).substring(0, 10);
-        console.log(wkStartSubString)
         var wkEndSubString = String(wkEnd).substring(0, 10);
-        console.log(wkEndSubString)
         waiterData[0].weekStart = wkStartSubString
         waiterData[0].weekEnd = wkEndSubString
         return waiterData
@@ -93,16 +89,22 @@ module.exports = function LoginsFactory(pool) {
         return databaseAccounts.rows;
     }
 
+    async function idForShifts(email){
+        let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
+        let theId = idExtraction.rows[0].id
+        return theId
+    }
+
     async function waitersTestAssistant() {
         let databaseWaiters = await pool.query(`SELECT * from waiters`);
         return databaseWaiters.rows;
     }
 
     async function waiterInfoForManager(){
-        //let databaseWaiters = await pool.query(`SELECT DISTINCT waiter_username from waiters`);
-        let databaseWaiters = await pool.query(`select waiter_username as waiters, weekdays_working as weekdays from waiters order by waiter_username;`);
-        console.log(databaseWaiters.rows)
-        return databaseWaiters.rows;
+        let waitersAndDaysExtraction = await pool.query(`select waiter_username, array_agg(weekdays_working) as weekdays from waiters group by waiter_username`);
+        let waitersAndDays = waitersAndDaysExtraction.rows
+        console.log(waitersAndDays) 
+        return waitersAndDays
     }
 
     return {
@@ -113,6 +115,10 @@ module.exports = function LoginsFactory(pool) {
         reset,
         accountsTestAssistant,
         waitersTestAssistant,
-        waiterInfoForManager
+        waiterInfoForManager,
+        idForShifts
     }
 }
+
+// let amountOfWaiters = Number(waitersNoDuplicates.length * 7)
+// console.log(amountOfWaiters)

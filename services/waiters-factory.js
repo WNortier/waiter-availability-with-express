@@ -28,21 +28,21 @@ module.exports = function WaiterFactory(pool) {
         return await pool.query(`DELETE FROM waiters WHERE waiters_id = $1`, idForEntriesToDelete)
     }
 
-    async function workingDaysDisplayer(id){
-        
-        if (id){
-        let idForWorkingDays = [id];
-        let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
-        let count = workingDaysExtraction.rowCount
-        //console.log(count)
-        let workingDays = workingDaysExtraction.rows
-        workingDays[0].rowCount = count
-        return workingDays
-    } else {
-        let workingDaysExtraction = await pool.query(`select * from waiters`)
-        console.log(WorkDaysExtraction.rows)
-        return workingDaysExtraction.rows
-    }
+    async function workingDaysDisplayer(id) {
+
+        if (id) {
+            let idForWorkingDays = [id];
+            let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
+            let count = workingDaysExtraction.rowCount
+            //console.log(count)
+            let workingDays = workingDaysExtraction.rows
+                workingDays[0].rowCount = count
+            return workingDays
+        } else {
+            let workingDaysExtraction = await pool.query(`select * from waiters`)
+            console.log(WorkDaysExtraction.rows)
+            return workingDaysExtraction.rows
+        }
     }
 
     async function dayCounter() {
@@ -194,7 +194,7 @@ module.exports = function WaiterFactory(pool) {
         dayCounter,
         shiftsAndDayMatcher,
         errorTestAssistant,
-        infoTestAssistant,  
+        infoTestAssistant,
     }
 }
 
