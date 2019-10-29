@@ -67,7 +67,6 @@ module.exports = function LoginsFactory(pool) {
         //Calculate date of Monday and date of Sunday for current week
         var currentDay = new Date();
         var currentWeekDay = currentDay.getDay();
-        currentWeekDay
         var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
         var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays -7))); //edited - multipled by two
         var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6)); //edited added 7

@@ -27,12 +27,12 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
     async function getLogin(req, res, next) {
         try {
             let emailInput = req.body.anInput
-            let idFetcher = await loginsFactory.idForShifts(emailInput)
+            //let idFetcher = await loginsFactory.idForShifts(emailInput)
 
             if (emailInput == "z" || emailInput == "x" || emailInput == "c" || emailInput == "v") {
                 res.render("staff/waiters", {
                     accountInfo: await loginsFactory.login(emailInput),
-                    workDays: await waitersFactory.workingDaysDisplayer(idFetcher)
+                    //workDays: await waitersFactory.workingDaysDisplayer(idFetcher)
                 });
             } else if (emailInput = "d") {
                 res.render("staff/manager", {
@@ -89,7 +89,8 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
             await loginsFactory.reset()
             res.render("staff/manager", {
                 shiftDays: await waitersFactory.shiftsAndDayMatcher(),
-                workDaysInfo: await loginsFactory.waiterInfoForManager()
+                workDaysInfo: await loginsFactory.waiterInfoForManager(),
+                dayCounts: await waitersFactory.dayCounter()
             });
         } catch (err) {
             next(err)

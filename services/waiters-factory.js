@@ -1,5 +1,7 @@
 module.exports = function WaiterFactory(pool) {
 
+
+
     async function shiftsPopulator(workday, id) {
         let waiterDataId = [id];
         let accountExtraction = await pool.query(`SELECT * FROM accounts WHERE id = $1`, waiterDataId)
@@ -46,6 +48,7 @@ module.exports = function WaiterFactory(pool) {
     }
 
     async function dayCounter() {
+
         dayCountObject = [{
             Monday: 0,
             Tuesday: 0,
@@ -127,7 +130,7 @@ module.exports = function WaiterFactory(pool) {
             }
         }
 
-        return true
+        return dayCountObject
     }
 
     async function shiftsAndDayMatcher() {
@@ -175,6 +178,21 @@ module.exports = function WaiterFactory(pool) {
                 }
             }
         }
+
+        let visualWaiterAvailability = await dayCounter()
+
+        waiterAvailabilityByColorDivPrinter[0].count = visualWaiterAvailability[0].Monday;
+        waiterAvailabilityByColorDivPrinter[1].count = visualWaiterAvailability[0].Tuesday;
+        waiterAvailabilityByColorDivPrinter[2].count = visualWaiterAvailability[0].Wednesday;
+        waiterAvailabilityByColorDivPrinter[3].count = visualWaiterAvailability[0].Thursday;
+        waiterAvailabilityByColorDivPrinter[4].count = visualWaiterAvailability[0].Friday;
+        waiterAvailabilityByColorDivPrinter[5].count = visualWaiterAvailability[0].Saturday;
+        waiterAvailabilityByColorDivPrinter[6].count = visualWaiterAvailability[0].Sunday;
+
+
+
+
+
         return waiterAvailabilityByColorDivPrinter
     }
 
