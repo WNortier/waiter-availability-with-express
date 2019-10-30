@@ -3,7 +3,7 @@ const LoginsFactory = require("../services/logins-factory");
 const WaitersFactory = require("../services/waiters-factory")
 const pg = require("pg");
 const Pool = pg.Pool;
-const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe_test';
+const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe';
 var bcrypt = require('bcryptjs');
 
 let useSSL = false;
@@ -23,6 +23,21 @@ describe('createAccount function', function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
         await pool.query(`delete from accounts`);
+    });
+    it('should prevent account creation if the username contains symbols', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "W@rwick",
+            password: "Qwerty",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        console.log(accountExtraction)
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid name!", error)
     });
     it('should populate the accounts table with a new user account with a unique id and email address', async function () {
         let loginsFactory = LoginsFactory(pool)

@@ -37,37 +37,55 @@ module.exports = function LoginsFactory(pool) {
     // }
 
     async function createAccount(account) {
-        let hashedpass = "";
-        await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
-            hashedpass = hashedpassForRoutes
-            //csoneole.log(hashedpass)
-            return hashedpassForRoutes
-        });
-        let AccountCreationDate = new Date()
-        let accountData = [
-            account.username,
-            account.email,
-            hashedpass,
-            AccountCreationDate
-        ];
-        await pool.query(`insert into accounts(username, email, password, date_created) 
+        errorMessage = "";
+        //username scrutinizer 
+        formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
+        let name = account.username
+        //console.log(name)
+        let letterScrutinizer = /^[A-Z]+$/i
+        let letterScrutinizerResult = letterScrutinizer.test(name);
+        //console.log(letterScrutinizerResult)
+        if (letterScrutinizerResult == false) {
+            errorMessage = "You have entered an invalid name!";
+            return false
+        } else if (letterScrutinizerResult == true) {
+
+
+
+
+
+            let hashedpass = "";
+            await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
+                hashedpass = hashedpassForRoutes
+                //csoneole.log(hashedpass)
+                return hashedpassForRoutes
+            });
+            let AccountCreationDate = new Date()
+            let accountData = [
+                account.username,
+                account.email,
+                hashedpass,
+                AccountCreationDate
+            ];
+            await pool.query(`insert into accounts(username, email, password, date_created) 
         values ($1, $2, $3, $4)`, accountData);
-        let emailArray = [];
-        emailArray.push(account.email)
-        let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
-        let foreignKey = primaryKeyExtraction.rows[primaryKeyExtraction.rowCount - 1].id
-        let waiterArray = [];
-        waiterArray[0] = account.username;
-        waiterArray[1] = foreignKey
-        //await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
-        return true
+            let emailArray = [];
+            emailArray.push(account.email)
+            let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
+            let foreignKey = primaryKeyExtraction.rows[primaryKeyExtraction.rowCount - 1].id
+            let waiterArray = [];
+            waiterArray[0] = account.username;
+            waiterArray[1] = foreignKey
+            //await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
+            return true
+        }
     }
 
     async function login(email) {
         let emailArray = [];
         emailArray.push(email)
-        letuserDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
-        letuserData = userDataExtraction.rows
+        let userDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
+        let userData = userDataExtraction.rows
         //Calculate date of Monday and date of Sunday for current week
         var currentDay = new Date();
         var currentWeekDay = currentDay.getDay();
@@ -78,7 +96,7 @@ module.exports = function LoginsFactory(pool) {
         var wkEndSubString = String(wkEnd).substring(0, 10);
         userData[0].weekStart = wkStartSubString
         userData[0].weekEnd = wkEndSubString
-        returnuserData
+        return userData
     }
 
     async function reset() {

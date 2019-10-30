@@ -3,7 +3,7 @@ CREATE TABLE accounts(
    username text not null,
    password text not null,
    email text UNIQUE not null,
-   last_login timestamp
+   date_created timestamp
 );
 
 create table waiters(

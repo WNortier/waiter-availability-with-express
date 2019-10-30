@@ -36,13 +36,11 @@ module.exports = function WaiterFactory(pool) {
             let idForWorkingDays = [id];
             let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
             let count = workingDaysExtraction.rowCount
-            //console.log(count)
             let workingDays = workingDaysExtraction.rows
                 workingDays[0].rowCount = count
             return workingDays
         } else {
             let workingDaysExtraction = await pool.query(`select * from waiters`)
-            console.log(WorkDaysExtraction.rows)
             return workingDaysExtraction.rows
         }
     }
@@ -61,7 +59,6 @@ module.exports = function WaiterFactory(pool) {
 
         let shiftsInfoExtraction = await pool.query(`select * from waiters`)
         let shiftsInfo = shiftsInfoExtraction.rows
-        //console.log(shiftsInfo)
         //Sorting array alphabetically by username (unneccessary but neat > for a-z < for z-a)
         let sortedShiftsInfo = shiftsInfo.sort(function (a, b) {
             return a.waiter_username.toLowerCase() > b.waiter_username.toLowerCase();
@@ -71,7 +68,6 @@ module.exports = function WaiterFactory(pool) {
         let daysThatHaveWaiters = sortedShiftsInfo.map((entry) => {
             return entry.weekdays_working
         })
-        //console.log(daysThatHaveWaiters)
         //Looping over the daysThatHaveWaiters array and updating the dayCountObject
         for (var i of daysThatHaveWaiters) {
             switch (i) {
@@ -188,11 +184,7 @@ module.exports = function WaiterFactory(pool) {
         waiterAvailabilityByColorDivPrinter[4].count = visualWaiterAvailability[0].Friday;
         waiterAvailabilityByColorDivPrinter[5].count = visualWaiterAvailability[0].Saturday;
         waiterAvailabilityByColorDivPrinter[6].count = visualWaiterAvailability[0].Sunday;
-
-
-
-
-
+        
         return waiterAvailabilityByColorDivPrinter
     }
 
