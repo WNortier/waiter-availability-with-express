@@ -39,10 +39,10 @@ module.exports = function LoginsFactory(pool) {
     async function createAccount(account) {
         let hashedpass = "";
         await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
-                hashedpass = hashedpassForRoutes
-                //csoneole.log(hashedpass)
-                return hashedpassForRoutes
-            });
+            hashedpass = hashedpassForRoutes
+            //csoneole.log(hashedpass)
+            return hashedpassForRoutes
+        });
         let AccountCreationDate = new Date()
         let accountData = [
             account.username,
@@ -52,29 +52,33 @@ module.exports = function LoginsFactory(pool) {
         ];
         await pool.query(`insert into accounts(username, email, password, date_created) 
         values ($1, $2, $3, $4)`, accountData);
-        let emailArray = []; emailArray.push(account.email)
+        let emailArray = [];
+        emailArray.push(account.email)
         let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
         let foreignKey = primaryKeyExtraction.rows[primaryKeyExtraction.rowCount - 1].id
-        let waiterArray = []; waiterArray[0] = account.username; waiterArray[1] = foreignKey 
+        let waiterArray = [];
+        waiterArray[0] = account.username;
+        waiterArray[1] = foreignKey
         //await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
         return true
     }
 
-    async function login(email){
-        let emailArray = []; emailArray.push(email)
-        let waiterDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
-        let waiterData = waiterDataExtraction.rows
+    async function login(email) {
+        let emailArray = [];
+        emailArray.push(email)
+        letuserDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
+        letuserData = userDataExtraction.rows
         //Calculate date of Monday and date of Sunday for current week
         var currentDay = new Date();
         var currentWeekDay = currentDay.getDay();
         var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
-        var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays -7))); //edited - multipled by two
+        var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays - 7))); //edited - multipled by two
         var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6)); //edited added 7
         var wkStartSubString = String(wkStart).substring(0, 10);
         var wkEndSubString = String(wkEnd).substring(0, 10);
-        waiterData[0].weekStart = wkStartSubString
-        waiterData[0].weekEnd = wkEndSubString
-        return waiterData
+        userData[0].weekStart = wkStartSubString
+        userData[0].weekEnd = wkEndSubString
+        returnuserData
     }
 
     async function reset() {
@@ -88,21 +92,21 @@ module.exports = function LoginsFactory(pool) {
         return databaseAccounts.rows;
     }
 
-    async function idForShifts(email){
-        let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
-        let theId = idExtraction.rows[0].id
-        return theId
-    }
+    // async function idForShifts(email) {
+    //     let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
+    //     let theId = idExtraction.rows[0].id
+    //     return theId
+    // }
 
     async function waitersTestAssistant() {
         let databaseWaiters = await pool.query(`SELECT * from waiters`);
         return databaseWaiters.rows;
     }
 
-    async function waiterInfoForManager(){
+    async function waiterInfoForManager() {
         let waitersAndDaysExtraction = await pool.query(`select waiter_username, array_agg(weekdays_working) as weekdays from waiters group by waiter_username`);
         let waitersAndDays = waitersAndDaysExtraction.rows
-        console.log(waitersAndDays) 
+        console.log(waitersAndDays)
         return waitersAndDays
     }
 
@@ -115,7 +119,7 @@ module.exports = function LoginsFactory(pool) {
         accountsTestAssistant,
         waitersTestAssistant,
         waiterInfoForManager,
-        idForShifts
+        //idForShifts
     }
 }
 
