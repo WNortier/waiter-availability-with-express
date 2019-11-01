@@ -39,22 +39,53 @@ module.exports = function LoginsFactory(pool) {
     async function createAccount(account) {
         errorMessage = "";
         //username scrutinizer 
-        formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
-        let name = account.username
-        //console.log(name)
-        let letterScrutinizer = /^[A-Z]+$/i
-        let letterScrutinizerResult = letterScrutinizer.test(name);
-        //console.log(letterScrutinizerResult)
-        let emailScrutinizer = /^[^\d\s]+@[^\d\s]+\.(com)$/
-        if (letterScrutinizerResult == false) {
-            errorMessage = "You have entered an invalid name!";
+        let usernameScrutinizer = /^[A-Z]+$/i
+        let usernameScrutinizerResult = usernameScrutinizer.test(account.username);
+        let emailScrutinizer = /^[^\d\s]+@[^\d\s]+(.co.za|.com)$/i
+        let emailScrutinizerResult = emailScrutinizer.test(account.email)
+        let passwordScrutinizer = /^[A-Z\d]{7,25}$/i
+        let passwordScrutinizerResult = passwordScrutinizer.test(account.password)
+        
+        //username is wrong 
+        if (usernameScrutinizerResult == false && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid username!";
             return false
-        } else if (letterScrutinizerResult == true) {
-
-
-
-
-
+        //email is wrong 
+        } else if (emailScrutinizerResult == false && usernameScrutinizerResult == true && passwordScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid email address!"
+            return false
+        } 
+        //password is wrong
+        else if (passwordScrutinizerResult == false && usernameScrutinizerResult == true && emailScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid password(minimum 7chars)!"
+            return false
+        }
+        //username and email is wrong
+        else if (usernameScrutinizerResult == false && emailScrutinizerResult == false && emailScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid username and email address!"
+            return false
+        }
+        //email and password is wrong
+        else if (emailScrutinizerResult == false && passwordScrutinizerResult == false && usernameScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid email address and password(minimum 7chars)!"
+            return false
+        }
+        //username and password is wrong 
+        else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == true) {
+            errorMessage = "You have entered an invalid username and password(minimum 7chars)!"
+            return false
+        }
+        else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == false) {
+            errorMessage = "You have entered an invalid username, email and password(minimum 7chars)!"
+            return false
+        }
+        
+        
+        
+        
+        
+        //everything is right 
+         else if (usernameScrutinizerResult == true && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
             let hashedpass = "";
             await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
                 hashedpass = hashedpassForRoutes
@@ -62,14 +93,15 @@ module.exports = function LoginsFactory(pool) {
                 return hashedpassForRoutes
             });
             let AccountCreationDate = new Date()
+            formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
+            
             let accountData = [
-                account.username,
+                formattedName,
                 account.email,
                 hashedpass,
                 AccountCreationDate
             ];
-            await pool.query(`insert into accounts(username, email, password, date_created) 
-        values ($1, $2, $3, $4)`, accountData);
+            await pool.query(`insert into accounts(username, email, password, date_created) values ($1, $2, $3, $4)`, accountData);
             let emailArray = [];
             emailArray.push(account.email)
             let primaryKeyExtraction = await pool.query(`select * from accounts where email = $1`, emailArray);
@@ -125,7 +157,6 @@ module.exports = function LoginsFactory(pool) {
     async function waiterInfoForManager() {
         let waitersAndDaysExtraction = await pool.query(`select waiter_username, array_agg(weekdays_working) as weekdays from waiters group by waiter_username`);
         let waitersAndDays = waitersAndDaysExtraction.rows
-        console.log(waitersAndDays)
         return waitersAndDays
     }
 
@@ -143,4 +174,3 @@ module.exports = function LoginsFactory(pool) {
 }
 
 // let amountOfWaiters = Number(waitersNoDuplicates.length * 7)
-// console.log(amountOfWaiters)

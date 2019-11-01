@@ -38,7 +38,7 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
                 res.render("staff/manager", {
                     accountInfo: await loginsFactory.login(emailInput),
                     shiftDays: await waitersFactory.shiftsAndDayMatcher(),
-                    workDaysInfo: await loginsFactory.waiterInfoForManager()                    
+                    workDaysInfo: await loginsFactory.waiterInfoForManager()
                 });
             }
         } catch (err) {
@@ -72,14 +72,21 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
     }
 
     async function getCreateAccount(req, res, next) {
+
+
         try {
-            await loginsFactory.createAccount({
-                username: req.body.username,
-                password: req.body.password,
-                email: req.body.email
-            });
-            req.flash('info', String(errorMessage))
-            res.redirect("displayCreateAccount")
+            if (req.body.username !== "" && req.body.password !== "" && req.body.email !== "") {
+                await loginsFactory.createAccount({
+                    username: req.body.username,
+                    password: req.body.password,
+                    email: req.body.email
+                });
+                req.flash('info', errorMessage)
+                res.redirect("/displayCreateAccount")
+            } else if (req.body.username == "" || req.body.password == "" || req.body.email == ""){
+                req.flash('info', "Please complete all input fields!")
+                res.redirect("/displayCreateAccount")
+            }
         } catch (err) {
             next(err);
         }

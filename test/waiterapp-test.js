@@ -4,7 +4,6 @@ const WaitersFactory = require("../services/waiters-factory")
 const pg = require("pg");
 const Pool = pg.Pool;
 const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe';
-var bcrypt = require('bcryptjs');
 
 let useSSL = false;
 let local = process.env.LOCAL || false;
@@ -17,33 +16,115 @@ const pool = new Pool({
     ssl: useSSL
 });
 
-
 describe('createAccount function', function () {
     beforeEach(async function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
         await pool.query(`delete from accounts`);
     });
-    it('should prevent account creation if the username contains symbols', async function () {
+    it('should return an error for incorrect username', async function () {
         let loginsFactory = LoginsFactory(pool)
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "W@rwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
-        console.log(accountExtraction)
         assert.equal(0, accountExtraction.length);
         let error = await waitersFactory.errorTestAssistant()
-        assert.equal("You have entered an invalid name!", error)
+        assert.equal("You have entered an invalid username!", error)
     });
-    it('should populate the accounts table with a new user account with a unique id and email address', async function () {
+    it('should return an error for incorrect email (no symbols or numbers and only .com or .co.za)', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwertyy",
+            email: "w4rw1ck.n0rti%r@gmail.co.za"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid email address!", error)
+    });
+    it('should return an error for invalid password', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwer#",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid password(minimum 7chars)!", error)
+    });
+    it('should return an error for invalid username and password', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warw1ck",
+            password: "Qwer#",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid username and password(minimum 7chars)!", error)
+    });
+    it('should return an error for invalid email address and password', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwer tyyyyyyy",
+            email: "warwick.nortiergmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid email address and password(minimum 7chars)!", error)
+    });
+    it('should return an error for invalid username and password', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "W@rwick",
+            password: "Qwer#",
+            email: "warwick.nortier@gmail.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid username and password(minimum 7chars)!", error)
+    });
+    it('should return an error for invalid username, password and email', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "W@rwick",
+            password: "Qwer#",
+            email: "warwick@gm4il.com"
+        }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("You have entered an invalid username, email and password(minimum 7chars)!", error)
+    });
+    it('should populate the accounts table with a new user account that has a unique id and email address', async function () {
         let loginsFactory = LoginsFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "qwertyyyy",
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -55,21 +136,21 @@ describe('createAccount function', function () {
         assert.equal("warwick.nortier@gmail.com", accountExtraction[0].email)
         assert.equal(idForFirstAccount, accountExtraction[0].id)
     });
-    it('should populate the accounts table with additional users with their unique id(s) and email address(s)', async function () {
+    it('should populate the accounts table with multiple users with their unique id(s) and email address(s)', async function () {
         let loginsFactory = LoginsFactory(pool)
         let accountDataOne = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         let accountDataTwo = {
             username: "Frank",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "frank@gmail.com"
         }
         let accountDataThree = {
             username: "Josie",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "josie@gmail.com"
         }
         //Creating first account, second and third account
@@ -105,7 +186,7 @@ describe('login function', function () {
         let loginsFactory = LoginsFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -129,12 +210,12 @@ describe('shiftsPopulator function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         let accountDataTwo = {
             username: "Frank",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "frank@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -154,19 +235,12 @@ describe('shiftsPopulator function', function () {
         assert.equal(8, waitersExtraction.length)
         assert.equal("Frank", waitersExtraction[2].waiter_username)
     });
-
-    beforeEach(async function () {
-        await pool.query(`delete from info`);
-        await pool.query(`delete from waiters`);
-        await pool.query(`delete from accounts`);
-    });
-
     it('should populate the waiters table based on workdays selected and prevent duplicate days', async function () {
         let loginsFactory = LoginsFactory(pool)
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -192,12 +266,12 @@ describe('removeShiftsForUser function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         let accountDataTwo = {
             username: "Frank",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "frank@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -233,7 +307,7 @@ describe('workingDaysDisplayer function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
@@ -260,17 +334,16 @@ describe('infoPopulator function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         let accountDataTwo = {
             username: "Frank",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "frank@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
         await loginsFactory.createAccount(accountDataTwo)
-        //await loginsFactory.createAccount(accountDataThree)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         let idForSecondAccount = accountExtraction[1].id
@@ -278,7 +351,6 @@ describe('infoPopulator function', function () {
         await waitersFactory.shiftsPopulator("Monday", idForSecondAccount)
         await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount)
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
-        //let error = await waitersFactory.errorTestAssistant()
         assert.equal(3, waitersExtraction.length)
         await waitersFactory.dayCounter()
         let infoExtraction = await waitersFactory.infoTestAssistant()
@@ -302,7 +374,6 @@ describe('infoPopulator function', function () {
 
         assert.equal("Sunday", infoExtraction[6].weekday)
         assert.equal(0, infoExtraction[6].waiters_for_day)
-        //console.log(infoExtraction)
     });
 });
 
@@ -318,22 +389,22 @@ describe('shiftsAndDayMatcher function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "warwick.nortier@gmail.com"
         }
         let accountDataTwo = {
             username: "Frank",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "frank@gmail.com"
         }
         let accountDataThree = {
             username: "Alex",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "alex@gmail.com"
         }
         let accountDataFour = {
             username: "Zahne",
-            password: "Qwerty",
+            password: "Qwertyy",
             email: "zahne@gmail.com"
         }
         await loginsFactory.createAccount(accountData)

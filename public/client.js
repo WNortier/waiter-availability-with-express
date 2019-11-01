@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (messageElem.innerHTML !== ''){
         setTimeout(function(){
             messageElem.innerHTML = '';
-        }, 3000);
+        }, 5000);
     }
 
 });
