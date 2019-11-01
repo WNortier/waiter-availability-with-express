@@ -45,6 +45,7 @@ module.exports = function LoginsFactory(pool) {
         let letterScrutinizer = /^[A-Z]+$/i
         let letterScrutinizerResult = letterScrutinizer.test(name);
         //console.log(letterScrutinizerResult)
+        let emailScrutinizer = /^[^\d\s]+@[^\d\s]+\.(com)$/
         if (letterScrutinizerResult == false) {
             errorMessage = "You have entered an invalid name!";
             return false

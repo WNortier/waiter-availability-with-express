@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function(){
-    let messageElem = document.querySelector('.message');
+    let messageElem = document.querySelector('.error');
     if (messageElem.innerHTML !== ''){
         setTimeout(function(){
             messageElem.innerHTML = '';

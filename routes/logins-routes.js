@@ -78,7 +78,7 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
                 password: req.body.password,
                 email: req.body.email
             });
-            req.flash('info', errorMessage)
+            req.flash('info', String(errorMessage))
             res.redirect("displayCreateAccount")
         } catch (err) {
             next(err);
