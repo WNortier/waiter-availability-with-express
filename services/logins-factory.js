@@ -1,6 +1,6 @@
 module.exports = function LoginsFactory(pool) {
     var bcrypt = require('bcryptjs');
-    let comparisonResult = "";
+
 
     // async function passwordHasher(password) {
     //    bcrypt.hash(password, 10, (err, hash) => {
@@ -45,16 +45,16 @@ module.exports = function LoginsFactory(pool) {
         let emailScrutinizerResult = emailScrutinizer.test(account.email)
         let passwordScrutinizer = /^[A-Z\d]{7,25}$/i
         let passwordScrutinizerResult = passwordScrutinizer.test(account.password)
-        
+
         //username is wrong 
         if (usernameScrutinizerResult == false && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
             errorMessage = "You have entered an invalid username!";
             return false
-        //email is wrong 
+            //email is wrong 
         } else if (emailScrutinizerResult == false && usernameScrutinizerResult == true && passwordScrutinizerResult == true) {
             errorMessage = "You have entered an invalid email address!"
             return false
-        } 
+        }
         //password is wrong
         else if (passwordScrutinizerResult == false && usernameScrutinizerResult == true && emailScrutinizerResult == true) {
             errorMessage = "You have entered an invalid password(minimum 7chars)!"
@@ -74,27 +74,25 @@ module.exports = function LoginsFactory(pool) {
         else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == true) {
             errorMessage = "You have entered an invalid username and password(minimum 7chars)!"
             return false
-        }
-        else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == false) {
+        } else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == false) {
             errorMessage = "You have entered an invalid username, email and password(minimum 7chars)!"
             return false
         }
-        
-        
-        
-        
-        
+
+
+//NEED TO ADD ERROR FOR ACCOUNT ALREADY EXISTS
+
+
         //everything is right 
-         else if (usernameScrutinizerResult == true && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
+        else if (usernameScrutinizerResult == true && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
             let hashedpass = "";
             await bcrypt.hash(account.password, 11).then(hashedpassForRoutes => {
                 hashedpass = hashedpassForRoutes
-                //csoneole.log(hashedpass)
                 return hashedpassForRoutes
             });
             let AccountCreationDate = new Date()
             formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
-            
+
             let accountData = [
                 formattedName,
                 account.email,
@@ -114,23 +112,86 @@ module.exports = function LoginsFactory(pool) {
         }
     }
 
-    async function login(email) {
-        let emailArray = [];
-        emailArray.push(email)
-        let userDataExtraction = await pool.query(`select * from accounts where email = $1`, emailArray)
+    async function login(email, loginPassword) {
+        errorMessage = "";
+        let userDataExtraction = await pool.query(`select * from accounts where email = $1`, [email])
+        let userDataRowCount = userDataExtraction.rowCount
         let userData = userDataExtraction.rows
-        //Calculate date of Monday and date of Sunday for current week
+        if (userDataRowCount == 0) {
+            errorMessage = "That account does not exist!"
+            return false
+        } else if (userDataRowCount > 0) {
+            let userHashedPassword = userData[0].password
+            //let comparisonResult = "";
+            // await bcrypt.compare(loginPassword, userHashedPassword, (err)).then(matchOrNoMatch => {
+            //     if(err) throw err;
+            //     comparisonResult = matchOrNoMatch;
+            //     return null
+            // }); 
+
+            // await bcrypt.compare(loginPassword, userHashedPassword).then(res, err => {
+            //     if (!err) {
+            //         return comparisonResult = res
+            //     } else {
+            //         return err
+            //     }
+            // })
+
+            const comparisonResult = await new Promise((resolve, reject) => {
+                bcrypt.compare(String(loginPassword), String(userHashedPassword), function (err, res) {
+                    if (err) reject(err)
+                    resolve(res)
+                });
+            })
+
+
+
+            console.log(comparisonResult)
+            if (comparisonResult == false) {
+                errorMessage = "That password does not match our records!"
+                return false
+            } else if (userDataRowCount > 0 && comparisonResult == true) {
+                //Comparing passwords
+                let userDataExtraction = await pool.query(`select * from accounts where email = $1`, [email])
+                let userData = userDataExtraction.rows
+                //Calculate date of Monday and date of Sunday for the coming week
+                var currentDay = new Date();
+                var currentWeekDay = currentDay.getDay();
+                var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
+                var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays - 7))); //subtracted 7
+                var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
+                var wkStartSubString = String(wkStart).substring(0, 10);
+                var wkEndSubString = String(wkEnd).substring(0, 10);
+                userData[0].weekStart = wkStartSubString
+                userData[0].weekEnd = wkEndSubString
+                //console.log(userData)
+                return userData
+            }
+        }
+
+    }
+
+
+    async function dataRerenderer_After_WorkdaySubmission_Or_Reset(email){
+        let userDataExtraction = await pool.query(`select * from accounts where email = $1`, [email])
+        let userData = userDataExtraction.rows
+        //Calculate date of Monday and date of Sunday for the coming week
         var currentDay = new Date();
         var currentWeekDay = currentDay.getDay();
         var lessDays = currentWeekDay == 0 ? 6 : currentWeekDay - 1;
-        var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays - 7))); //edited - multipled by two
-        var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6)); //edited added 7
+        var wkStart = new Date(new Date(currentDay).setDate(currentDay.getDate() - (lessDays - 7))); //subtracted 7
+        var wkEnd = new Date(new Date(wkStart).setDate(wkStart.getDate() + 6));
         var wkStartSubString = String(wkStart).substring(0, 10);
         var wkEndSubString = String(wkEnd).substring(0, 10);
         userData[0].weekStart = wkStartSubString
         userData[0].weekEnd = wkEndSubString
+        //console.log(userData)
         return userData
     }
+
+
+
+
 
     async function reset() {
         await pool.query(`delete from info`)
@@ -143,11 +204,7 @@ module.exports = function LoginsFactory(pool) {
         return databaseAccounts.rows;
     }
 
-    // async function idForShifts(email) {
-    //     let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
-    //     let theId = idExtraction.rows[0].id
-    //     return theId
-    // }
+
 
     async function waitersTestAssistant() {
         let databaseWaiters = await pool.query(`SELECT * from waiters`);
@@ -160,6 +217,11 @@ module.exports = function LoginsFactory(pool) {
         return waitersAndDays
     }
 
+    async function idForWorkingDaysDisplayerToExecute(email) {
+        let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
+        return idExtraction.rows[0].id
+    }
+
     return {
         // passwordHasher,
         // passwordComparer,
@@ -169,7 +231,8 @@ module.exports = function LoginsFactory(pool) {
         accountsTestAssistant,
         waitersTestAssistant,
         waiterInfoForManager,
-        //idForShifts
+        dataRerenderer_After_WorkdaySubmission_Or_Reset,
+        idForWorkingDaysDisplayerToExecute
     }
 }
 

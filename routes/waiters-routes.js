@@ -3,22 +3,20 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
     async function getWorkdays(req, res, next) {
         try {
             let aWorkDaySubmission = req.body.workday 
-            let idPart = req.params.id
-            let emailPart = req.params.email
             if (aWorkDaySubmission == undefined){
                 var warning = "No day Selected!"
                 req.flash('info', warning) 
                 res.render("staff/waiters", {
-                    accountInfo: await loginsFactory.login(emailPart),
-                    workDays: await waitersFactory.workingDaysDisplayer(idPart)
+                    accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
+                    workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
                 });
             } else if (aWorkDaySubmission !== ""){
-            await waitersFactory.shiftsPopulator(aWorkDaySubmission, idPart);
-            await waitersFactory.dayCounter();
+            await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator(aWorkDaySubmission, req.params.id);
+            await waitersFactory.daysOnWaiterTableCounter();
             req.flash('info', errorMessage)
             res.render("staff/waiters", {
-                accountInfo: await loginsFactory.login(emailPart),
-               workDays: await waitersFactory.workingDaysDisplayer(idPart)
+                accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
+               workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
             });
         }
         } catch (err) {
@@ -27,14 +25,11 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
     }
 
     async function getWaiterReset(req, res, next) {
-        try {
-            let idPart = Number(req.params.id);
-            console.log(idPart)
-            let emailPart = req.params.email
-            await waitersFactory.removeShiftsForUser(idPart)
-            await waitersFactory.dayCounter()
+        try {  
+            await waitersFactory.removeShiftsForUser(req.params.id)
+            await waitersFactory.daysOnWaiterTableCounter()
             res.render("staff/waiters", {
-                accountInfo: await loginsFactory.login(emailPart)
+                accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email)
             });
         } catch (err) {
             next(err);

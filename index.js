@@ -47,10 +47,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
 //Logins Routes
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)

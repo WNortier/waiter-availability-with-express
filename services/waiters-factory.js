@@ -2,7 +2,7 @@ module.exports = function WaiterFactory(pool) {
 
 
 
-    async function shiftsPopulator(workday, id) {
+    async function waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator(workday, id) {
         let waiterDataId = [id];
         let accountExtraction = await pool.query(`SELECT * FROM accounts WHERE id = $1`, waiterDataId)
         let account = accountExtraction.rows;
@@ -30,6 +30,8 @@ module.exports = function WaiterFactory(pool) {
         return await pool.query(`DELETE FROM waiters WHERE waiters_id = $1`, idForEntriesToDelete)
     }
 
+
+
     async function workingDaysDisplayer(id) {
 
         if (id) {
@@ -37,15 +39,20 @@ module.exports = function WaiterFactory(pool) {
             let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
             let count = workingDaysExtraction.rowCount
             let workingDays = workingDaysExtraction.rows
-                workingDays[0].rowCount = count
-            return workingDays
-        } else {
-            let workingDaysExtraction = await pool.query(`select * from waiters`)
-            return workingDaysExtraction.rows
+            workingDays[0].rowCount = count
+            return count
         }
-    }
+    } 
 
-    async function dayCounter() {
+        
+        
+    //     else {
+    //         let workingDaysExtraction = await pool.query(`select * from waiters`)
+    //         return workingDaysExtraction.rows
+    //     }
+    // }
+
+    async function weekdaysWorking_OnWaiterTableCounter() {
 
         dayCountObject = [{
             Monday: 0,
@@ -175,7 +182,7 @@ module.exports = function WaiterFactory(pool) {
             }
         }
 
-        let visualWaiterAvailability = await dayCounter()
+        let visualWaiterAvailability = await weekdaysWorking_OnWaiterTableCounter()
 
         waiterAvailabilityByColorDivPrinter[0].count = visualWaiterAvailability[0].Monday;
         waiterAvailabilityByColorDivPrinter[1].count = visualWaiterAvailability[0].Tuesday;
@@ -184,7 +191,7 @@ module.exports = function WaiterFactory(pool) {
         waiterAvailabilityByColorDivPrinter[4].count = visualWaiterAvailability[0].Friday;
         waiterAvailabilityByColorDivPrinter[5].count = visualWaiterAvailability[0].Saturday;
         waiterAvailabilityByColorDivPrinter[6].count = visualWaiterAvailability[0].Sunday;
-        
+
         return waiterAvailabilityByColorDivPrinter
     }
 
@@ -198,10 +205,10 @@ module.exports = function WaiterFactory(pool) {
     }
 
     return {
-        shiftsPopulator,
+        waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator,
         removeShiftsForUser,
         workingDaysDisplayer,
-        dayCounter,
+        weekdaysWorking_OnWaiterTableCounter,
         shiftsAndDayMatcher,
         errorTestAssistant,
         infoTestAssistant,
