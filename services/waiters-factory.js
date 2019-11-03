@@ -39,8 +39,8 @@ module.exports = function WaiterFactory(pool) {
             let workingDaysExtraction = await pool.query(`select * from waiters where waiters_id = $1`, idForWorkingDays)
             let count = workingDaysExtraction.rowCount
             let workingDays = workingDaysExtraction.rows
-            workingDays[0].rowCount = count
-            return count
+            workingDays[0].amountOfWorkingDays = count
+            return workingDays
         }
     } 
 

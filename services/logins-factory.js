@@ -45,6 +45,8 @@ module.exports = function LoginsFactory(pool) {
         let emailScrutinizerResult = emailScrutinizer.test(account.email)
         let passwordScrutinizer = /^[A-Z\d]{7,25}$/i
         let passwordScrutinizerResult = passwordScrutinizer.test(account.password)
+        let userDataExtraction = await pool.query(`select * from accounts where email = $1`, [account.email])
+        let userDataRowCount = userDataExtraction.rowCount
 
         //username is wrong 
         if (usernameScrutinizerResult == false && emailScrutinizerResult == true && passwordScrutinizerResult == true) {
@@ -77,7 +79,11 @@ module.exports = function LoginsFactory(pool) {
         } else if (usernameScrutinizerResult == false && passwordScrutinizerResult == false && emailScrutinizerResult == false) {
             errorMessage = "You have entered an invalid username, email and password(minimum 7chars)!"
             return false
-        }
+        //account already exists
+        } else if (usernameScrutinizerResult == true && passwordScrutinizerResult == true && emailScrutinizerResult == true && userDataRowCount > 0) {
+            errorMessage = "That account already exists!"
+            return false
+        } 
 
 
 //NEED TO ADD ERROR FOR ACCOUNT ALREADY EXISTS
@@ -107,6 +113,7 @@ module.exports = function LoginsFactory(pool) {
             let waiterArray = [];
             waiterArray[0] = account.username;
             waiterArray[1] = foreignKey
+            errorMessage = "Account created! You may now login..."
             //await pool.query(`insert into waiters (waiter_username, waiters_id) values ($1, $2)`, waiterArray);
             return true
         }
@@ -146,7 +153,7 @@ module.exports = function LoginsFactory(pool) {
 
 
 
-            console.log(comparisonResult)
+            //console.log(comparisonResult)
             if (comparisonResult == false) {
                 errorMessage = "That password does not match our records!"
                 return false
@@ -218,8 +225,10 @@ module.exports = function LoginsFactory(pool) {
     }
 
     async function idForWorkingDaysDisplayerToExecute(email) {
-        let idExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
-        return idExtraction.rows[0].id
+        let accountExtraction = await pool.query(`SELECT * from accounts where email = $1`, [email])
+        let account = accountExtraction.rows
+        console.log(account)
+        return account[0].id
     }
 
     return {

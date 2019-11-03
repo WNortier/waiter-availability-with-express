@@ -1,6 +1,7 @@
 module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
 
     async function home(req, res, next) {
+        console.log(req.session)
         try {
             res.render("home", {});
         } catch (err) {
@@ -27,7 +28,7 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
     async function getLogin(req, res, next) {
         try {
 
-            let idFetcher = await loginsFactory.idForWorkingDaysDisplayerToExecute(req.body.email)
+            //let idFetcher = await loginsFactory.idForWorkingDaysDisplayerToExecute(req.body.email)
 
             //if (emailInput == "z" || emailInput == "x" || emailInput == "c" || emailInput == "v") {
 
@@ -98,17 +99,20 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory) {
     }
 
     async function getCreateAccount(req, res, next) {
-
-
         try {
             if (req.body.username !== "" && req.body.password !== "" && req.body.email !== "") {
-                await loginsFactory.createAccount({
+                const successBoolean = await loginsFactory.createAccount({
                     username: req.body.username,
                     password: req.body.password,
                     email: req.body.email
                 });
-                req.flash('info', errorMessage)
-                res.redirect("/displayCreateAccount")
+                if (successBoolean == false) {
+                    req.flash('info', errorMessage)
+                    res.redirect("/displayCreateAccount")
+                } else if (successBoolean == true){
+                    req.flash('created', errorMessage)
+                    res.redirect('/')
+                }
             } else if (req.body.username == "" || req.body.password == "" || req.body.email == "") {
                 req.flash('info', "Please complete all input fields!")
                 res.redirect("/displayCreateAccount")

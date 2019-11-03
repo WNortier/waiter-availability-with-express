@@ -30,21 +30,29 @@ const loginsFactory = LoginsFactory(pool)
 const waitersFactory = WaitersFactory(pool)
 const loginsRoutes = LoginsRoutes(waitersFactory, loginsFactory)
 const waitersRoutes = WaitersRoutes(waitersFactory, loginsFactory)
+const two_hours = 1000 * 60 * 60 * 2
 
 app.use(session({
-  secret: "<add a secret string here>",
-  resave: false,
-  saveUninitialized: true
+    secret: "foxdawgs",
+    resave: false,
+    saveUninitialized: true,
+    _expires: two_hours,
+    cookie: { maxAge: 60000 }
 }));
+
 //Flashmessaging
 app.use(flash());
 //Handlebars
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));
 //Bodyparser
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
 app.use(bodyParser.json())
 
 //Logins Routes

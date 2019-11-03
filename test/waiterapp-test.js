@@ -120,6 +120,26 @@ describe('createAccount function', function () {
         let error = await waitersFactory.errorTestAssistant()
         assert.equal("You have entered an invalid username, email and password(minimum 7chars)!", error)
     });
+    it('should return an error if the account already exists', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        let accountData = {
+            username: "Warwick",
+            password: "Qwerty",
+            email: "warwick@gmail.com"
+        }
+        // let accountDataTwo = {
+        //     username: "Warwick",
+        //     password: "Qwerty",
+        //     email: "warwick@gmail.com"
+        // }
+        await loginsFactory.createAccount(accountData)
+        let accountExtraction = await loginsFactory.accountsTestAssistant()
+        assert.equal(0, accountExtraction.length);
+        await loginsFactory.createAccount(accountData)
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("That account already exists!", error)
+    });
     it('should populate the accounts table with a new user account that has a unique id and email address', async function () {
         let loginsFactory = LoginsFactory(pool)
         let accountData = {
@@ -190,7 +210,7 @@ describe('login function', function () {
             email: "warwick.nortier@gmail.com"
         }
         await loginsFactory.createAccount(accountData)
-        let loginData = await loginsFactory.login("warwick.nortier@gmail.com")
+        let loginData = await loginsFactory.login("warwick.nortier@gmail.com", "Qwertyy")
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         assert.equal("Warwick", loginData[0].username)
@@ -199,7 +219,7 @@ describe('login function', function () {
     });
 });
 
-describe('shiftsPopulator function', function () {
+describe('waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator function', function () {
     beforeEach(async function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
@@ -223,14 +243,14 @@ describe('shiftsPopulator function', function () {
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         let idForSecondAccount = accountExtraction[1].id
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-            .then(await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Sunday", idForSecondAccount))
-            .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Friday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Saturday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount))
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForSecondAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Thursday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Friday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Saturday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForFirstAccount))
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         assert.equal(8, waitersExtraction.length)
         assert.equal("Frank", waitersExtraction[2].waiter_username)
@@ -246,8 +266,8 @@ describe('shiftsPopulator function', function () {
         await loginsFactory.createAccount(accountData)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         let error = await waitersFactory.errorTestAssistant()
         assert.equal(1, waitersExtraction.length)
@@ -279,14 +299,14 @@ describe('removeShiftsForUser function', function () {
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         let idForSecondAccount = accountExtraction[1].id
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-            .then(await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Sunday", idForSecondAccount))
-            .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Friday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Saturday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount))
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForSecondAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Thursday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Friday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Saturday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForFirstAccount))
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         assert.equal(8, waitersExtraction.length)
         assert.equal("Frank", waitersExtraction[2].waiter_username)
@@ -313,10 +333,10 @@ describe('workingDaysDisplayer function', function () {
         await loginsFactory.createAccount(accountData)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-            .then(await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount))
-            .then(await waitersFactory.shiftsPopulator("Thursday", idForFirstAccount))
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForFirstAccount))
+            .then(await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Thursday", idForFirstAccount))
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         assert.equal(4, waitersExtraction.length)
     });
@@ -347,12 +367,12 @@ describe('infoPopulator function', function () {
         let accountExtraction = await loginsFactory.accountsTestAssistant()
         let idForFirstAccount = accountExtraction[0].id
         let idForSecondAccount = accountExtraction[1].id
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-        await waitersFactory.shiftsPopulator("Monday", idForSecondAccount)
-        await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForSecondAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForFirstAccount)
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         assert.equal(3, waitersExtraction.length)
-        await waitersFactory.dayCounter()
+        await waitersFactory.weekdaysWorking_OnWaiterTableCounter()
         let infoExtraction = await waitersFactory.infoTestAssistant()
         assert.equal("Monday", infoExtraction[0].weekday)
         assert.equal(2, infoExtraction[0].waiters_for_day)
@@ -416,24 +436,24 @@ describe('shiftsAndDayMatcher function', function () {
         let idForSecondAccount = accountExtraction[1].id
         let idForThirdAccount = accountExtraction[2].id
         let idForFourthAccount = accountExtraction[3].id
-        await waitersFactory.shiftsPopulator("Sunday", idForFirstAccount)
-        await waitersFactory.shiftsPopulator("Monday", idForFirstAccount)
-        await waitersFactory.shiftsPopulator("Wednesday", idForFirstAccount)
-        await waitersFactory.shiftsPopulator("Tuesday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Monday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForFirstAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForFirstAccount)
 
-        await waitersFactory.shiftsPopulator("Sunday", idForSecondAccount)
-        await waitersFactory.shiftsPopulator("Wednesday", idForSecondAccount)
-        await waitersFactory.shiftsPopulator("Tuesday", idForSecondAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForSecondAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForSecondAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForSecondAccount)
 
-        await waitersFactory.shiftsPopulator("Sunday", idForThirdAccount)
-        await waitersFactory.shiftsPopulator("Wednesday", idForThirdAccount)
-        await waitersFactory.shiftsPopulator("Tuesday", idForThirdAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForThirdAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Wednesday", idForThirdAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Tuesday", idForThirdAccount)
 
-        await waitersFactory.shiftsPopulator("Sunday", idForFourthAccount)
+        await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator("Sunday", idForFourthAccount)
         let waitersExtraction = await loginsFactory.waitersTestAssistant()
         //let error = await waitersFactory.errorTestAssistant()
         assert.equal(11, waitersExtraction.length)
-        await waitersFactory.dayCounter()
+        await waitersFactory.weekdaysWorking_OnWaiterTableCounter()
         let waiterAvailabilityByColor = await waitersFactory.shiftsAndDayMatcher()
         assert.equal("green", waiterAvailabilityByColor[1].style)
         assert.equal("green", waiterAvailabilityByColor[2].style)
