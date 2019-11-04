@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/WNortier/waiter-availability-with-expressJS.svg?branch=master)](https://travis-ci.org/WNortier/waiter-availability-with-expressJS)
+
 ## Background 
 Your sister is running a coffee shop in town, she needs a web application to help her schedule weekly waiter shifts.
 Create a web application that can help her.
