@@ -31,13 +31,12 @@ const waitersFactory = WaitersFactory(pool)
 const loginsRoutes = LoginsRoutes(waitersFactory, loginsFactory, pool)
 const waitersRoutes = WaitersRoutes(waitersFactory, loginsFactory)
 const two_hours = 1000 * 60 * 60 * 2
-const sessionName = 'sid'
 
 app.use(session({
     secret: "ssshfoxdawgs",
     resave: false,
     saveUninitialized: false,
-    name: 'sessionName',
+    name: 'sid',
     cookie: { maxAge: two_hours,
     secure: false }
 }));
@@ -64,13 +63,14 @@ app.get('/about', loginsRoutes.displayAbout)
 app.post('/login', loginsRoutes.getLogin);
 app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
-app.post("/reset", loginsRoutes.getReset);
+app.get("/resetShifts/:email", loginsRoutes.getShiftsReset);
+app.post("/resetAccounts", loginsRoutes.getAccountsReset);
 app.get("/logout/:email", loginsRoutes.getLogout)
 //Waiters Routes
 app.post("/getWorkdays/:id/:email", waitersRoutes.getWorkdays)
 app.post("/getWorkdays/reset/:id/:email", waitersRoutes.getWaiterReset)
 
-let portNumber = process.env.PORT || 4007;
+let portNumber = process.env.PORT || 4400;
 
 app.listen(portNumber, function () {
   console.log('App starting on port', portNumber);

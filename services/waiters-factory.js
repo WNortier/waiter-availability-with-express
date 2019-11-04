@@ -211,7 +211,7 @@ module.exports = function WaiterFactory(pool) {
         weekdaysWorking_OnWaiterTableCounter,
         shiftsAndDayMatcher,
         errorTestAssistant,
-        infoTestAssistant,
+        infoTestAssistant
     }
 }
 

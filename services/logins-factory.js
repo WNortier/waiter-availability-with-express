@@ -60,12 +60,12 @@ module.exports = function LoginsFactory(pool) {
             });
             let AccountCreationDate = new Date()
             formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
-            let email = account.email
-            formattedEmail = email.toLowerCase()
+            // let email = account.email
+            // formattedEmail = email.toLowerCase()
 
             let accountData = [
                 formattedName,
-                formattedEmail,
+                account.email,
                 hashedpass,
                 AccountCreationDate
             ];
@@ -98,6 +98,7 @@ module.exports = function LoginsFactory(pool) {
                     resolve(res)
                 });
             })
+            //console.log(comparisonResult)
             if (comparisonResult == false) {
                 errorMessage = "That password does not match our records!"
                 return false
@@ -137,9 +138,12 @@ module.exports = function LoginsFactory(pool) {
         return userData
     }
 
-    async function reset() {
+    async function resetShifts() {
         await pool.query(`delete from info`)
         await pool.query(`delete from waiters`)
+    }
+
+    async function resetAccounts() {
         await pool.query(`delete from accounts`)
     }
 
@@ -162,7 +166,8 @@ module.exports = function LoginsFactory(pool) {
     return {
         createAccount,
         login,
-        reset,
+        resetShifts,
+        resetAccounts,
         accountsTestAssistant,
         waitersTestAssistant,
         waiterInfoForManager,
