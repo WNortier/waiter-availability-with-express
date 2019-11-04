@@ -24,8 +24,6 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
         }
     }
 
-
-
     async function getWaiterReset(req, res, next) {
         try {
             await waitersFactory.removeShiftsForUser(req.params.id)

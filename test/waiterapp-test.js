@@ -125,21 +125,17 @@ describe('createAccount function', function () {
         let waitersFactory = WaitersFactory(pool)
         let accountData = {
             username: "Warwick",
-            password: "Qwerty",
+            password: "Qwertyyyy",
             email: "warwick@gmail.com"
         }
-        // let accountDataTwo = {
-        //     username: "Warwick",
-        //     password: "Qwerty",
-        //     email: "warwick@gmail.com"
-        // }
         await loginsFactory.createAccount(accountData)
         let accountExtraction = await loginsFactory.accountsTestAssistant()
-        assert.equal(0, accountExtraction.length);
+        assert.equal(1, accountExtraction.length);
         await loginsFactory.createAccount(accountData)
         let error = await waitersFactory.errorTestAssistant()
         assert.equal("That account already exists!", error)
     });
+
     it('should populate the accounts table with a new user account that has a unique id and email address', async function () {
         let loginsFactory = LoginsFactory(pool)
         let accountData = {
@@ -201,6 +197,13 @@ describe('login function', function () {
         await pool.query(`delete from info`);
         await pool.query(`delete from waiters`);
         await pool.query(`delete from accounts`);
+    });
+    it('should return an error if the account does not exist', async function () {
+        let loginsFactory = LoginsFactory(pool)
+        let waitersFactory = WaitersFactory(pool)
+        await loginsFactory.login("warwick.nortier@gmail.com", "Qwertyy")
+        let error = await waitersFactory.errorTestAssistant()
+        assert.equal("That account does not exist!", error)
     });
     it('should return all account data on the user logging in for rendering purposes', async function () {
         let loginsFactory = LoginsFactory(pool)

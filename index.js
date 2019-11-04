@@ -28,16 +28,18 @@ const pool = new Pool({
 
 const loginsFactory = LoginsFactory(pool)
 const waitersFactory = WaitersFactory(pool)
-const loginsRoutes = LoginsRoutes(waitersFactory, loginsFactory)
+const loginsRoutes = LoginsRoutes(waitersFactory, loginsFactory, pool)
 const waitersRoutes = WaitersRoutes(waitersFactory, loginsFactory)
 const two_hours = 1000 * 60 * 60 * 2
+const sessionName = 'sid'
 
 app.use(session({
-    secret: "foxdawgs",
+    secret: "ssshfoxdawgs",
     resave: false,
-    saveUninitialized: true,
-    _expires: two_hours,
-    cookie: { maxAge: 60000 }
+    saveUninitialized: false,
+    name: 'sessionName',
+    cookie: { maxAge: two_hours,
+    secure: false }
 }));
 
 //Flashmessaging
@@ -63,6 +65,7 @@ app.post('/login', loginsRoutes.getLogin);
 app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
 app.post("/reset", loginsRoutes.getReset);
+app.get("/logout/:email", loginsRoutes.getLogout)
 //Waiters Routes
 app.post("/getWorkdays/:id/:email", waitersRoutes.getWorkdays)
 app.post("/getWorkdays/reset/:id/:email", waitersRoutes.getWaiterReset)
