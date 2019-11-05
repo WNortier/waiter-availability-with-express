@@ -32,7 +32,7 @@
                     <div class="col-12 center">
                         {{#accountInfo}}
                         <form action="/getWorkdays/{{id}}/{{email}}" id="getWorkdays" method="POST">
-                            <span>
+                            {{!-- <span>
 
                                 <label> <input type="radio" name="workday" class="#" value="Monday">Monday</label>
                             </span>
@@ -59,7 +59,21 @@
                             <span>
 
                                 <label><input type="radio" name="workday" class="#" value="Sunday">Sunday</label>
-                            </span>
+                            </span> --}}
+                            
+                            <input type="checkbox" name="workday" value="Monday">Monday
+                            
+                            <input type="checkbox" name="workday" value="Tuesday">Tuesday
+                           
+                            <input type="checkbox" name="workday" value="Wednesday">Wednesday
+                            
+                            <input type="checkbox" name="workday" value="Thursday">Thursday
+                            <input type="checkbox" name="workday" value="Friday">Friday
+                            <input type="checkbox" name="workday" value="Saturday">Saturday
+                            <input type="checkbox" name="workday" value="Sunday">Sunday
+
+
+
                         </form>
                         {{/accountInfo}}
                     </div>

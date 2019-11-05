@@ -2,22 +2,37 @@ module.exports = function WaitersRoutes(waitersFactory, loginsFactory) {
 
     async function getWorkdays(req, res, next) {
         try {
-            const aWorkDaySubmission = req.body.workday
-            if (aWorkDaySubmission == undefined) {
-                var warning = "No day Selected!"
+            let aWorkDayArray = req.body.workday
+
+            if (aWorkDayArray == undefined) {
+                var warning = "No input selected!"
                 req.flash('info', warning)
                 res.render("staff/waiters", {
                     accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
                     workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
                 });
-            } else if (aWorkDaySubmission !== "") {
-                await waitersFactory.waiterTable_Username_WeekdaysWorking_ForeignKeyPopulator(aWorkDaySubmission, req.params.id);
-                await waitersFactory.weekdaysWorking_OnWaiterTableCounter();
-                req.flash('info', errorMessage)
-                res.render("staff/waiters", {
-                    accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
-                    workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
-                });
+            } else if (aWorkDayArray !== "") {
+                if (typeof aWorkDayArray == "string") {
+                    let singleWorkdayArray = []
+                    singleWorkdayArray.push(aWorkDayArray)
+                    console.log(typeof singleWorkdayArray)
+                    await waitersFactory.waiterTablePopulatorUsingArray(singleWorkdayArray, req.params.id);
+                    await waitersFactory.weekdaysWorking_OnWaiterTableCounter();
+                    req.flash('info', errorMessage)
+                    res.render("staff/waiters", {
+                        accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
+                        workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
+                    });
+                } else {
+                    //console.log(aWorkDayArray)
+                    await waitersFactory.waiterTablePopulatorUsingArray(aWorkDayArray, req.params.id);
+                    await waitersFactory.weekdaysWorking_OnWaiterTableCounter();
+                    req.flash('info', errorMessage)
+                    res.render("staff/waiters", {
+                        accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
+                        workDays: await waitersFactory.workingDaysDisplayer(req.params.id)
+                    });
+                }
             }
         } catch (err) {
             next(err);
