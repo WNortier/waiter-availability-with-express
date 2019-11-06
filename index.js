@@ -60,11 +60,11 @@ app.use(bodyParser.json())
 app.get('/', loginsRoutes.home);
 app.get('/home', loginsRoutes.returnHome)
 app.get('/about', loginsRoutes.displayAbout)
-app.post('/login', loginsRoutes.getLogin);
+app.post('/login', loginsRoutes.getLogin)
 app.get('/displayCreateAccount', loginsRoutes.displayCreateAccount)
 app.post('/getCreateAccount', loginsRoutes.getCreateAccount)
-app.get("/resetShifts/:email", loginsRoutes.getShiftsReset);
-app.post("/resetAccounts", loginsRoutes.getAccountsReset);
+app.get("/resetShifts/:email", loginsRoutes.getShiftsReset)
+app.post("/resetAccounts", loginsRoutes.getAccountsReset)
 app.get("/logout/:email", loginsRoutes.getLogout)
 //Waiters Routes
 app.post("/getWorkdays/:id/:email", waitersRoutes.getWorkdays)

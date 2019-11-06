@@ -9,9 +9,6 @@
         <div class="col-4 waiterBlock">
             <h3 style="display: inline;">Welcome to your shifts portal </h3>
             <h3 style="color:rgb(49, 135, 163); display:inline;">{{username}}</h3>
-            <form action="/logout/{{email}}" method="GET" style="display:inline;">
-                <button type="submit">Logout</button>
-            </form>
         </div>
         <div class="col-4"></div>
         {{/accountInfo}}
@@ -32,48 +29,20 @@
                     <div class="col-12 center">
                         {{#accountInfo}}
                         <form action="/getWorkdays/{{id}}/{{email}}" id="getWorkdays" method="POST">
-                            {{!-- <span>
-
-                                <label> <input type="radio" name="workday" class="#" value="Monday">Monday</label>
-                            </span>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Tuesday">Tuesday</label>
-                            </span>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Wednesday">Wednesday</label>
-                            </span><br>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Thursday">Thursday</label>
-                            </span>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Friday">Friday</label>
-                            </span><br>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Saturday">Saturday</label>
-                            </span>
-                            <span>
-
-                                <label><input type="radio" name="workday" class="#" value="Sunday">Sunday</label>
-                            </span> --}}
-                            
-                            <input type="checkbox" name="workday" value="Monday">Monday
-                            
-                            <input type="checkbox" name="workday" value="Tuesday">Tuesday
-                           
-                            <input type="checkbox" name="workday" value="Wednesday">Wednesday
-                            
-                            <input type="checkbox" name="workday" value="Thursday">Thursday
-                            <input type="checkbox" name="workday" value="Friday">Friday
-                            <input type="checkbox" name="workday" value="Saturday">Saturday
-                            <input type="checkbox" name="workday" value="Sunday">Sunday
-
-
-
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Monday">Monday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Tuesday">Tuesday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Wednesday">Wednesday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Thursday">Thursday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Friday">Friday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Saturday">Saturday
+                            <span class="checkmark"></span></label>
+                            <label class="checkboxContainer"><input type="checkbox" name="workday" value="Sunday">Sunday
+                            <span class="checkmark"></span></label>
                         </form>
                         {{/accountInfo}}
                     </div>
@@ -94,43 +63,27 @@
                         <h5 style="color: red; font-weight: lighter">{{messages.info}}</h5>
                     </div>
                 </div>
-
             </div>
-
-
-
-
-
         </div>
     </div>
 
     <div class="col-3 waiterBlockOrange">
 
         <div class="row">
-            <div class="col-3"></div>
-            <div class="col-5">
-                <h4>Shifts Selected:</h4>
-            </div>
-            <div class="col-1">
-                <h4 style="color:green; float: left;">{{#workDays}}{{amountOfWorkingDays}}{{/workDays}}</h4>
+            <div class="col-12">
+                <h4>Shifts Selected: {{#workDays}}{{amountOfWorkingDays}}{{/workDays}}</h4>
             </div>
         </div>
 
         <table class="center waitersTable" style="width:60%">
-            {{!-- <tr>
-                <th></th>
-                <th style="text-decoration:underline;">Shifts Selected</th>
-            </tr> --}}
             <tr>
                 <td></td>
             </tr>
             {{#each workDays}}
-            {{!-- {{#if workDays}} --}}
             <tr>
                 <td>☕</td>
                 <td style="float: left">{{weekdays_working}}</td>
             </tr>
-            {{!-- {{/if}} --}}
             {{/each}}
         </table>
 

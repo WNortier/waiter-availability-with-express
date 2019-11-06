@@ -163,6 +163,16 @@ module.exports = function LoginsFactory(pool) {
         return waitersAndDays
     }
 
+    async function logoutRendererHelper(id){
+        if (id){
+        let userEmailExtraction = await pool.query(`select * from accounts where id = $1`, [id]) 
+        console.log(userEmailExtraction.rows[0])
+        return userEmailExtraction.rows[0]
+    } else {
+        return false
+    }
+    }
+
     return {
         createAccount,
         login,
@@ -171,6 +181,7 @@ module.exports = function LoginsFactory(pool) {
         accountsTestAssistant,
         waitersTestAssistant,
         waiterInfoForManager,
-        dataRerenderer_After_WorkdaySubmission_Or_Reset
+        dataRerenderer_After_WorkdaySubmission_Or_Reset,
+        logoutRendererHelper
     }
 }
