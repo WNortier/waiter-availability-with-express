@@ -187,15 +187,14 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
 
     async function getShiftsReset(req, res, next) {
         try {
+            await loginsFactory.resetShifts()
             res.render("staff/manager", {
                 accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
                 shiftDays: await waitersFactory.shiftsAndDayMatcher(),
                 workDaysInfo: await loginsFactory.waiterInfoForManager(),
                 displayLogout: await loginsFactory.logoutRendererHelper(req.session.userId),
-                reset: await loginsFactory.resetShifts(),
                 dayCounts: await waitersFactory.weekdaysWorking_OnWaiterTableCounter(),
-                resetInfo: await loginsFactory.resetInfo(),
-                
+                resetInfo: await loginsFactory.resetInfo()
             });
         } catch (err) {
             next(err)
@@ -208,9 +207,6 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
             let databaseInfo = await pool.query(`SELECT * from Info`);
             let databaseWaitersRows = databaseWaiters.rowCount
             let databaseInfoRows = databaseInfo.rowCount
-            console.log(databaseWaitersRows)
-            console.log(databaseInfoRows)
-
             if (databaseInfoRows > 0 && databaseWaitersRows > 0) {
                 res.render("staff/manager", {
                     shiftDays: await waitersFactory.shiftsAndDayMatcher(),
