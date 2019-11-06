@@ -57,7 +57,6 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
                 let userDataAccounts = userDataAccountsExtraction.rows
                 let userDataAccountsId = userDataAccounts[0].id
                 req.session.userId = userDataAccountsId
-                console.log(req.session)
                 var waiterDataExtraction = await pool.query(`select * from waiters where waiters_id = $1`, [userDataAccountsId])
                 if (waiterDataExtraction.rowCount > 0) {
                     res.render("staff/waiters", {
@@ -188,12 +187,15 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
 
     async function getShiftsReset(req, res, next) {
         try {
-            await loginsFactory.resetShifts()
             res.render("staff/manager", {
                 accountInfo: await loginsFactory.dataRerenderer_After_WorkdaySubmission_Or_Reset(req.params.email),
                 shiftDays: await waitersFactory.shiftsAndDayMatcher(),
                 workDaysInfo: await loginsFactory.waiterInfoForManager(),
-                dayCounts: await waitersFactory.weekdaysWorking_OnWaiterTableCounter()
+                displayLogout: await loginsFactory.logoutRendererHelper(req.session.userId),
+                reset: await loginsFactory.resetShifts(),
+                dayCounts: await waitersFactory.weekdaysWorking_OnWaiterTableCounter(),
+                resetInfo: await loginsFactory.resetInfo(),
+                
             });
         } catch (err) {
             next(err)
@@ -206,6 +208,8 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
             let databaseInfo = await pool.query(`SELECT * from Info`);
             let databaseWaitersRows = databaseWaiters.rowCount
             let databaseInfoRows = databaseInfo.rowCount
+            console.log(databaseWaitersRows)
+            console.log(databaseInfoRows)
 
             if (databaseInfoRows > 0 && databaseWaitersRows > 0) {
                 res.render("staff/manager", {
@@ -220,14 +224,14 @@ module.exports = function LoginsRoutes(waitersFactory, loginsFactory, pool) {
                         return res.redirect('staff/manager')
                     }
                     res.clearCookie('sid')
-                    console.log(req.session)
+                    //console.log(req.session)
                     res.redirect('/')
                 });
-                res.render("staff/manager", {
-                    shiftDays: await waitersFactory.shiftsAndDayMatcher(),
-                    workDaysInfo: await loginsFactory.waiterInfoForManager(),
-                    dayCounts: await waitersFactory.weekdaysWorking_OnWaiterTableCounter()
-                });
+                // res.render("staff/manager", {
+                //     shiftDays: await waitersFactory.shiftsAndDayMatcher(),
+                //     workDaysInfo: await loginsFactory.waiterInfoForManager(),
+                //     dayCounts: await waitersFactory.weekdaysWorking_OnWaiterTableCounter()
+                // });
             }
         } catch (err) {
             next(err)

@@ -143,6 +143,10 @@ module.exports = function LoginsFactory(pool) {
         await pool.query(`delete from waiters`)
     }
 
+    async function resetInfo(){
+        await pool.query(`delete from info`)
+    }
+
     async function resetAccounts() {
         await pool.query(`delete from accounts`)
     }
@@ -182,6 +186,7 @@ module.exports = function LoginsFactory(pool) {
         waitersTestAssistant,
         waiterInfoForManager,
         dataRerenderer_After_WorkdaySubmission_Or_Reset,
-        logoutRendererHelper
+        logoutRendererHelper,
+        resetInfo
     }
 }
