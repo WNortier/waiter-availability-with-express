@@ -5,7 +5,7 @@ const pg = require("pg");
 const Pool = pg.Pool;
 const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe_test';
 
-let useSSL = false;
+// let useSSL = false;
 let local = process.env.LOCAL || false;
 if (process.env.DATABASE_URL && !local) {
     useSSL = true;
@@ -13,7 +13,7 @@ if (process.env.DATABASE_URL && !local) {
 
 const pool = new Pool({
     connectionString,
-    ssl: useSSL
+    // ssl: useSSL
 });
 
 describe('createAccount function', function () {
