@@ -26,8 +26,6 @@ const pool = new Pool({
   ssl: useSSL
 });
 
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
 const loginsFactory = LoginsFactory(pool)
 const waitersFactory = WaitersFactory(pool)
 const loginsRoutes = LoginsRoutes(waitersFactory, loginsFactory, pool)
