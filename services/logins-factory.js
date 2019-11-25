@@ -60,8 +60,6 @@ module.exports = function LoginsFactory(pool) {
             });
             let AccountCreationDate = new Date()
             formattedName = account.username.charAt(0).toUpperCase() + (account.username.slice(1)).toLowerCase();
-            // let email = account.email
-            // formattedEmail = email.toLowerCase()
 
             let accountData = [
                 formattedName,
@@ -98,7 +96,6 @@ module.exports = function LoginsFactory(pool) {
                     resolve(res)
                 });
             })
-            //console.log(comparisonResult)
             if (comparisonResult == false) {
                 errorMessage = "That password does not match our records!"
                 return false
@@ -170,7 +167,6 @@ module.exports = function LoginsFactory(pool) {
     async function logoutRendererHelper(id){
         if (id){
         let userEmailExtraction = await pool.query(`select * from accounts where id = $1`, [id]) 
-        console.log(userEmailExtraction.rows[0])
         return userEmailExtraction.rows[0]
     } else {
         return false
