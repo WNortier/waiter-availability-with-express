@@ -3,7 +3,7 @@ const LoginsFactory = require("../services/logins-factory");
 const WaitersFactory = require("../services/waiters-factory")
 const pg = require("pg");
 const Pool = pg.Pool;
-const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe';
+const connectionString = process.env.DATABASE_URL || 'postgresql://warwick:pg123@localhost:5432/javascriptcafe_test';
 
 let useSSL = false;
 let local = process.env.LOCAL || false;
