@@ -1,3 +1,4 @@
+'use strict';
 //Express
 const express = require('express');
 const exphbs = require('express-handlebars');
@@ -24,6 +25,8 @@ const pool = new Pool({
   connectionString,
   ssl: useSSL
 });
+
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 const loginsFactory = LoginsFactory(pool)
 const waitersFactory = WaitersFactory(pool)
